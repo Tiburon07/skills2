@@ -3,12 +3,14 @@ import { Routes, RouterModule } from '@angular/router';
 import { ContactComponent } from './contact/contact.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ErrorComponent } from './error/error.component';
+import { MapManagerComponent } from './map/map-manager/map-manager.component';
 import { ProfileComponent } from './profile/profile.component';
 
 const routes: Routes = [
   { path: '', component: DashboardComponent },
   { path: 'profile', component: ProfileComponent },
   { path: 'contact', component: ContactComponent },
+  { path: 'map', component: MapManagerComponent },
   { path: '**', component: ErrorComponent }
   ]
 

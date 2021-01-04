@@ -11,6 +11,7 @@ import { FooterComponent } from './footer/footer.component';
 import { ProfileComponent } from './profile/profile.component';
 import { ErrorComponent } from './error/error.component';
 import { ContactComponent } from './contact/contact.component';
+import { MapManagerComponent } from './map/map-manager/map-manager.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { ContactComponent } from './contact/contact.component';
     FooterComponent,
     ProfileComponent,
     ErrorComponent,
-    ContactComponent
+    ContactComponent,
+    MapManagerComponent
   ],
   imports: [
     BrowserModule,
