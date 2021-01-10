@@ -18,7 +18,7 @@ export class UsersComponent implements OnInit {
   users: User[] | undefined;
   showForm: boolean = false;
 
-  constructor(private service: UserService, private route: ActivatedRoute, private toastr: ToastrService) {}
+  constructor(private service: UserService, private route: ActivatedRoute, private toastr: ToastrService) { }
 
   ngOnInit(): void {
     this.getUsers();
@@ -39,17 +39,10 @@ export class UsersComponent implements OnInit {
   onDeleteUser(user: User) {
     this.service.deleteUser(user).subscribe(
       res => {
-        if (res.success) {
-          this.toastr.success(res.message);
-          this.getUsers();
-        } else {
-          this.toastr.error(res.message);
-        }
+        if (res.success) {this.toastr.success(res.message); this.getUsers();}
+        else this.toastr.error(res.message);
       },
-      err => {
-        console.log(err);
-        this.toastr.error(err.error.message);
-      }
+      err => {this.toastr.error(err.message, err.name)}
     );
   }
 

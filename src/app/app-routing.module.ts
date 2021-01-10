@@ -8,11 +8,12 @@ import { MapManagerComponent } from './map/map-manager/map-manager.component';
 import { ProfileComponent } from './profile/profile.component';
 
 //UMS
+import { LoginComponent } from './ums/login/login.component';
+import { SignupComponent } from './ums/signup/signup.component';
 import { UserDetailComponent } from './ums/user-detail/user-detail.component';
 import { UserProfileComponent } from './ums/user-profile/user-profile.component';
 import { UsersComponent } from './ums/users/users.component';
 import { RouteGuardUmsService } from './ums/route-guard-ums.service';
-import { LoginComponent } from './ums/login/login.component';
 
 const routes: Routes = [
   { path: '', component: DashboardComponent },
@@ -21,11 +22,12 @@ const routes: Routes = [
   { path: 'map', component: MapManagerComponent },
 
   //UMS
-  { path: 'ums/login', component: LoginComponent},
-  { path: 'ums', component: UsersComponent, canActivate: [RouteGuardUmsService] },
-  { path: 'users/new', component: UserDetailComponent, canActivate: [RouteGuardUmsService]  },
-  { path: 'users/:id', component: UserProfileComponent, canActivate: [RouteGuardUmsService]  },
-  { path: 'users/:id/edit', component: UserDetailComponent, canActivate: [RouteGuardUmsService]  },
+  { path: 'login/ums', component: LoginComponent },
+  { path: 'signup/ums', component: SignupComponent },
+  { path: 'ums', component: UsersComponent, canActivate: [RouteGuardUmsService]},
+  { path: 'users/new', component: UserDetailComponent, canActivate: [RouteGuardUmsService]},
+  { path: 'users/:id', component: UserProfileComponent, canActivate: [RouteGuardUmsService]},
+  { path: 'users/:id/edit', component: UserDetailComponent, canActivate: [RouteGuardUmsService]},
 
   //Google Books
   { path: 'gbooks', component: GoogleBooksComponent },

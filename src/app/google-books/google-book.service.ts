@@ -10,6 +10,10 @@ export class GoogleBookService {
   constructor(private http: HttpClient) { }
 
   getBooks(bookTitle: string) {
-    return fetch(this.apiUrl + bookTitle).then(res => res.json());
+    return fetch(this.apiUrl + bookTitle)
+      .then(res => res.json())
+      .catch(err => {
+        console.log(err);
+    });
   }
 }

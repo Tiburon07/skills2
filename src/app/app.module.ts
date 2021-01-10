@@ -6,6 +6,7 @@ import { registerLocaleData } from '@angular/common';
 import localeIt from '@angular/common/locales/it';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http'
+import { NgxSpinnerModule } from "ngx-spinner";
 
 //Currency format
 registerLocaleData(localeIt);
@@ -33,6 +34,7 @@ import { LoginComponent } from './ums/login/login.component';
 //Google Books
 import { GoogleBooksComponent } from './google-books/google-books.component';
 import { GoogleBookService } from './google-books/google-book.service';
+import { SignupComponent } from './ums/signup/signup.component';
 
 @NgModule({
   declarations: [
@@ -51,15 +53,17 @@ import { GoogleBookService } from './google-books/google-book.service';
     UserDetailComponent,
     UserProfileComponent,
     GoogleBooksComponent,
-    LoginComponent
+    LoginComponent,
+    SignupComponent
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    ToastrModule.forRoot(),
+    ToastrModule.forRoot({ timeOut: 30000}),
     AppRoutingModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    NgxSpinnerModule
   ],
   providers: [UserService, GoogleBookService],
   bootstrap: [AppComponent]

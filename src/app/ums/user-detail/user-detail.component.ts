@@ -35,16 +35,13 @@ export class UserDetailComponent implements OnInit {
     this.userSelected = new User();
     this.route.paramMap.subscribe(
       (params) => {
-        if (!params.get('id')) {
+        if (params.get('id')) {
           this.service.getUser(Number(params.get('id'))).subscribe(
             res => {
               this.userSelected = res.data;
               this.title = 'Utente ' + this.userSelected.fiscalcode;
             },
-            err => {
-              this.toastr.success(err.message);
-              this.toastr.error(err.error.message);
-            }
+            err => {this.toastr.error(err.message, err.name)}
           );
         }
       }
@@ -66,10 +63,7 @@ export class UserDetailComponent implements OnInit {
           this.toastr.error(res.message);
         }
       },
-      err => {
-        console.log(err);
-        this.toastr.error(err.error.message);
-      }
+      error => {this.toastr.error(error.message, error.name);}
     );
   }
 

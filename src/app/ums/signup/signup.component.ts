@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { MenuComponent } from '../../menu/menu.component';
 import { User } from '../models/User';
 import { AuthService } from '../services/auth.service';
 
@@ -15,26 +14,33 @@ interface Jwt {
 }
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  selector: 'app-signup',
+  templateUrl: './signup.component.html',
+  styleUrls: ['./signup.component.css']
 })
-export class LoginComponent implements OnInit {
 
-  constructor(private toastr: ToastrService, private authUmsService: AuthService, private router: Router) {}
+export class SignupComponent implements OnInit {
+
+  constructor(private toastr: ToastrService, private authSetviceUms: AuthService, private router: Router) {
+    authSetviceUms.onUserSignedUp.subscribe(
+      (user: User) => {
+        this.router.navigate(['/ums']);
+      }
+    )
+  }
 
   ngOnInit(): void {}
 
-  signIn(form: NgForm) {
+  signUp(form: NgForm) {
     if (!form.valid) this.toastr.error('Credenziali non valide');
     else
-      this.authUmsService.signIn(form.value.email, form.value.password).subscribe(
+      this.authSetviceUms.signUp(form.value.name, form.value.email, form.value.password).subscribe(
         (payload: Jwt) => {
           this.router.navigate(['/ums']);
         },
-        ({message:msg, name:title}) => {
+        ({ message: msg, name: title }) => {
           this.toastr.error(msg, title);
         }
-    );
+      );
   }
 }

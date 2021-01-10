@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { GoogleBookService } from './google-book.service';
+import { NgxSpinnerService } from "ngx-spinner";
 import { from, fromEvent, of } from 'rxjs';
 import { tap, map, switchMap, debounceTime, filter, catchError } from 'rxjs/operators';
 
@@ -51,7 +52,7 @@ export class GoogleBooksComponent implements OnInit {
 
   private searchElem = $('#id_search_book');
 
-  constructor(private service: GoogleBookService) { }
+  constructor(private service: GoogleBookService, private spinner: NgxSpinnerService) { }
 
   ngOnInit(): void {
     this.searchBookOnKeyUp();
@@ -69,7 +70,8 @@ export class GoogleBooksComponent implements OnInit {
     ).subscribe((ele: string) => this.getBooks(ele));
   }
 
-  getBooks(title:string) {
+  getBooks(title: string) {
+    this.spinner.show()
     const p = this.service.getBooks(title)
     from(p).pipe(
       switchMap((data: GoogleBook) => from(data.items) || []),
@@ -83,7 +85,7 @@ export class GoogleBooksComponent implements OnInit {
         }
         return book;
       })
-    ).subscribe((book: Book) => this.displayBook(book));
+    ).subscribe((book: Book) => {this.displayBook(book); this.spinner.hide()}, err => {console.log(err); this.spinner.hide()});
   }
 
   displayBook(book: Book) {

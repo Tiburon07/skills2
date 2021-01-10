@@ -1,4 +1,4 @@
-  <!-- Main Sidebar Container -->
+<!-- Main Sidebar Container -->
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
   <!-- Sidebar -->
   <div class="sidebar">
@@ -8,7 +8,7 @@
         <img src="/assets/img/unnamed.jpg" class="img-circle elevation-2" alt="User Image">
       </div>
       <div class="info">
-        <a routerLink="/" class="d-block">Tiberio Iordache</a>
+        <a routerLink="/" class="d-block">{{username}}</a>
       </div>
     </div>
 
@@ -16,11 +16,44 @@
     <nav class="mt-2">
       <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
         <li class="nav-item">
+          <a class="nav-link">
+            <i class="nav-icon fas fa-users-cog"></i>
+            <p>UMS</p>
+            <i class="fas fa-angle-left right"></i>
+          </a>
+          <ul class="nav nav-treeview">
+            <li *ngIf="!isUserLoggedIn" (click)="login($event)" class="nav-item">
+              <a class="nav-link">
+                <i class="fas fa-unlock-alt pr-2 pl-2 fa-sm"></i>
+                <p>login</p>
+              </a>
+            </li>
+            <li *ngIf="!isUserLoggedIn" class="nav-item">
+              <a (click)="signUp($event)" class="nav-link">
+                <i class="fas fa-user-edit fa-sm pr-2 pl-2"></i>
+                <p>registrati</p>
+              </a>
+            </li>
+            <li *ngIf="isUserLoggedIn" class="nav-item">
+              <a routerLink="/ums" class="nav-link">
+                <i class="fas fa-users-cog pr-2 pl-2 fa-sm"></i> 
+                <p>ums</p>
+              </a>
+            </li>
+            <li *ngIf="isUserLoggedIn" class="nav-item">
+              <a (click)="logout($event)" class="nav-link">
+                <i class="fas fa-sign-out-alt pr-2 pl-2 fa-sm"></i>
+                <p>logout</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <!--<li class="nav-item">
           <a routerLink="/profile" class="nav-link">
             <i class="nav-icon far fa-address-card"></i>
             <p>Profilo</p>
           </a>
-        </li>
+        </li>-->
         <li class="nav-item">
           <a routerLink="/gbooks" class="nav-link">
             <i class="nav-icon fas fa-book"></i>
@@ -33,39 +66,6 @@
             <p>Mappa</p>
           </a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link">
-            <i class="nav-icon fas fa-users-cog"></i>
-            <p>UMS</p>
-            <i class="fas fa-angle-left right"></i>
-          </a>
-          <ul class="nav nav-treeview">
-            <li class="nav-item">
-              <a routerLink="/ums/login" class="nav-link">
-                <i class="fas fa-unlock-alt pr-2 pl-2 fa-sm"></i>
-                <p>login</p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a (click)="logout()" routerLink="/ums/login" class="nav-link">
-                <i class="fas fa-sign-out-alt pr-2 pl-2 fa-sm"></i>
-                <p>logout</p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a routerLink="/ums/login" class="nav-link">
-                <i class="fas fa-user-edit fa-sm pr-2 pl-2"></i>
-                <p>Registrati</p>
-              </a>
-            </li>
-          </ul>
-        </li>
-        <!--        <li class="nav-item">
-          <a routerLink="/contact" class="nav-link">
-            <i class="nav-icon fas fa-at"></i>
-            <p>Contatti</p>
-          </a>
-        </li>-->
       </ul>
     </nav>
     <!-- /.sidebar-menu -->

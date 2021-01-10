@@ -1,6 +1,7 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { User } from '../models/User';
+import { AuthService } from './auth.service';
 
 interface UsersResonse {
   data: User[];
@@ -21,43 +22,32 @@ export class UserService {
   users: User[] = [];
   private apiUrl = "http://laraapi.test/api/users"
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private authService: AuthService ) {}
 
+  getAuthHeader(): HttpHeaders {
+    return new HttpHeaders({Authorization: 'Bearer ' + this.authService.getToken()})
+  }
 
   getUsers() {
-    return this.http.get<UsersResonse>(this.apiUrl);
+    return this.http.get<UsersResonse>(this.apiUrl, {headers :this.getAuthHeader()});
   }
 
   getUser(id: number) {
     let url = this.apiUrl + '/' + id
-    return this.http.get<UserResonse>(url);
+    return this.http.get<UserResonse>(url, {headers: this.getAuthHeader()});
   }     
 
-/*  deleteUser(user: User): void {
-    let index = this.users.indexOf(user);
-    if (index >= 0) this.users.splice(index, 1);
-  }*/
-
   deleteUser(user: User){
-    return this.http.delete<UserResonse>(this.apiUrl + '/' + user.id)
+    return this.http.delete<UserResonse>(this.apiUrl + '/' + user.id, {headers: this.getAuthHeader() })
   }
-
-  /*updateUser(user: User): void {
-    const idx = this.users.findIndex((v) => v.id == user.id);
-    if (idx !== -1) this.users[idx] = user;
-  }*/
 
   updateUser(user: User) {
-    return this.http.patch<UserResonse>(this.apiUrl + '/' + user.id, user)
+    return this.http.patch<UserResonse>(this.apiUrl + '/' + user.id, user, {headers: this.getAuthHeader()})
   }
 
-  /*insertUser(user: User): void {
-    user.id = this.users.length + 1;
-    this.users.push(user);
-  }*/
-
   insertUser(user: User) {
-    return this.http.post<UserResonse>(this.apiUrl, user)
+    console.log(user);
+    return this.http.post<UserResonse>(this.apiUrl, user, {headers: this.getAuthHeader()})
   }
 
 }
