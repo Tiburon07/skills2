@@ -1,0 +1,12 @@
+<td>
+  <button (click)="updateUser(user)" class="btn btn-secondary btn-sm mr-2 mt-1" title="Aggiorna Utente"><i class="far fa-edit"></i></button>
+  <button (click)="deleteUser(user)" class="btn btn-danger btn-sm mr-2 mt-1" title="Elimina Utente"><i class="far fa-trash-alt"></i></button>
+  <button (click)="infoUser(user)" class="btn btn-primary btn-sm mr-2 mt-1" title="Info utente"><i class="fas fa-info-circle"></i></button>
+</td>
+<td>{{user.name}}</td>
+<td>{{user.lastname}}</td>
+<td>{{user.fiscalcode}}</td>
+<td>{{user.email}}</td>
+<td>{{user.phone}}</td>
+<td>{{user.province}}</td>
+<td>{{user.age}}</td>

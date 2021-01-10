@@ -7,4 +7,9 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'skills2';
+
+  topFunction() {
+    document.documentElement.scrollTop = 0
+  }
 }
+

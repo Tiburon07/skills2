@@ -1,0 +1,76 @@
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h4>{{title}}</h4>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="#" routerLink="/">Home</a></li>
+            <li class="breadcrumb-item"><a href="#" routerLink="/ums">Ums</a></li>
+            <li class="breadcrumb-item active">{{title}}</li>
+          </ol>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-2"></div>
+        <div class="col-8">
+          <form #f="ngForm">
+            <input type="hidden" [(ngModel)]="userSelected.id" name="id" />
+            <div class="form-group">
+              <label for="name">Nome*</label>
+              <input [(ngModel)]="userSelected.name" required minlength="3" #firstname="ngModel" name="firstname" type="text" class="form-control" id="firstname" placeholder="Nome">
+              <div *ngIf="firstname && firstname.dirty && firstname.errors && firstname.invalid">
+                <small *ngIf="firstname.errors.required" class="text-danger pl-2">Nome obbligatorio</small>
+                <small *ngIf="firstname.errors.minlength" class="text-danger pl-2">Lunghezza minima 3 caratteri</small>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="lastname">Cognome*</label>
+              <input [(ngModel)]="userSelected.lastname" required minlength="3" pattern="[a-zA-Z\s]*" #lastname="ngModel" type="text" class="form-control" name="lastname" id="lastname" placeholder="Cognome">
+              <div *ngIf="lastname && lastname.errors && lastname.dirty && lastname.invalid">
+                <small *ngIf="lastname.errors.required" class="text-danger pl-2">Cognome obbligatorio</small>
+                <small *ngIf="lastname.errors.minlength" class="text-danger pl-2">Lunghezza minima 3 caratteri</small>
+                <small *ngIf="lastname.errors.pattern" class="text-danger pl-2">Nome non valido</small>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="fiscalcode">Codice Fiscale*</label>
+              <input [(ngModel)]="userSelected.fiscalcode" required pattern="^([A-Z]{6}[0-9LMNPQRSTUV]{2}[ABCDEHLMPRST]{1}[0-9LMNPQRSTUV]{2}[A-Z]{1}[0-9LMNPQRSTUV]{3}[A-Z]{1})$|([0-9]{11})$" #fiscalcode="ngModel" type="text" class="form-control" name="fiscalcode" id="fiscalcode" placeholder="Codice Fiscale" oninput="this.value = this.value.toUpperCase()">
+              <div *ngIf="fiscalcode && fiscalcode.errors && fiscalcode.dirty && fiscalcode.invalid">
+                <small *ngIf="fiscalcode.errors.required" class="text-danger pl-2">Codice Fiscale obbligatorio</small>
+                <small *ngIf="fiscalcode.errors.pattern" class="text-danger pl-2">Codice Fiscale non valido</small>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="email">Email*</label>
+              <input [(ngModel)]="userSelected.email" #email="ngModel" required pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" type="text" class="form-control" name="email" id="email" placeholder="Email">
+              <div *ngIf="email && email.errors && email.dirty && email.invalid">
+                <small *ngIf="email.errors.required" class="text-danger pl-2">Email obbligatoria</small>
+                <small *ngIf="email.errors.pattern" class="text-danger pl-2">Email non valida</small>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="phone">Telefono</label>
+              <input [(ngModel)]="userSelected.phone" type="text" class="form-control" name="phone" id="phone" placeholder="Telefono">
+            </div>
+            <div class="form-group">
+              <label for="provincia">Provincia</label>
+              <input [(ngModel)]="userSelected.province" type="text" class="form-control" name="provincia" id="provincia" placeholder="Provincia">
+            </div>
+            <div class="form-group">
+              <label for="eta">Età</label>
+              <input [(ngModel)]="userSelected.age" type="number" class="form-control" name="eta" id="eta" placeholder="Eta">
+            </div>
+            <button (click)="resetForm(f.form)" class="btn btn-info mr-2">Reset</button>
+            <button [disabled]="f.invalid" (click)="saveUser()" class="btn btn-success">Salva</button>
+          </form>
+        </div>
+      </div>
+      <div class="row"><div class="col-md-12 mb-2"></div></div>
+    </div><!-- /.container-fluid -->
+  </section>
+</div>

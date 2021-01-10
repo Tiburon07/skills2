@@ -1,0 +1,48 @@
+  <!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1>Google Books</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item active">Google Books</li>
+          </ol>
+        </div>
+      </div>
+      <h2 class="text-center display-6">Search</h2>
+      <!-- Input Search -->
+      <div class="row">
+        <div class="col-md-8 offset-md-2">
+          <form action="simple-results.html">
+            <div class="input-group input-group-lg">
+              <input id="bookSearchInput" #bookSearchInput type="search" class="form-control form-control-lg" placeholder="Titolo del libro da carcare..." value="">
+              <div class="input-group-append">
+                <button (click)="onClickRefresh($event)" title="Reset" type="button" class="btn btn-lg btn-default">
+                  <i class="fa fa-redo"></i>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      <!--Item BOOKS-->
+      <div class="row mt-3">
+        <div class="col-md-10 offset-md-1">
+          <div class="list-group">
+            <div id="listItem" class="list-group-item"></div>
+          </div>
+        </div>
+      </div>
+      <!--Item BOOKS-->
+    </div><!-- /.container-fluid -->
+  </section>
+
+
+
+</div>
+<!-- /.content-wrapper -->
