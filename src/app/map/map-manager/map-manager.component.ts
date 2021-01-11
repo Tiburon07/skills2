@@ -28,9 +28,9 @@ export class MapManagerComponent implements OnInit {
 
     this.locationHome.bind(this)();
 
-   //this.map.locate({ setView: true, maxZoom: 16 });
-   //this.map.on('locationfound', this.onLocationFound.bind(this));
-   //this.map.on('locationerror', this.onLocationError.bind(this));*/
+   this.map.locate({ setView: true, maxZoom: 16 });
+   this.map.on('locationfound', this.onLocationFound.bind(this));
+   this.map.on('locationerror', this.onLocationError.bind(this));
   }
 
   locationHome(): void {
@@ -44,8 +44,8 @@ export class MapManagerComponent implements OnInit {
         shadowUrl: '/assets/img/markers/marker-shadow.png'
       })
     };
-    L.marker([41.99232, 12.71876], icon).addTo(this.map);
-    L.circle([41.99232, 12.71876], radius).addTo(this.map);
+/*    L.marker([41.99232, 12.71876], icon).addTo(this.map);
+    L.circle([41.99232, 12.71876], radius).addTo(this.map);*/
   }
 
   onLocationFound(e: { accuracy: any; latlng: L.LatLngLiteral | L.LatLngTuple; }): void {
