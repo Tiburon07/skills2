@@ -3,7 +3,9 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  APIURL: 'http://laraapi.test/api/users',
+  AUTHURL: 'http://laraapi.test/api/auth/'
 };
 
 /*

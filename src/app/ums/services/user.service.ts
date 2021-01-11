@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { User } from '../models/User';
 import { AuthService } from './auth.service';
+import { environment } from '../../../environments/environment'
 
 interface UsersResonse {
   data: User[];
@@ -20,7 +21,7 @@ interface UserResonse {
 export class UserService {
 
   users: User[] = [];
-  private apiUrl = "http://laraapi.test/api/users"
+  private apiUrl = environment.APIURL//"http://laraapi.test/api/users"
 
   constructor(private http: HttpClient, private authService: AuthService ) {}
 

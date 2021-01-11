@@ -4,6 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import { User } from '../models/User';
 import { NgxSpinnerService } from "ngx-spinner";
 import { tap } from 'rxjs/operators';
+import { environment } from '../../../environments/environment'
 
 
 interface Jwt {
@@ -23,7 +24,7 @@ export class AuthService {
   @Output() onUserSignedUp = new EventEmitter<User>()
   @Output() onUserLogout = new EventEmitter()
 
-  private authURL = 'http://laraapi.test/api/auth/'
+  private authURL = environment.AUTHURL;//'http://laraapi.test/api/auth/'
   private isUserLogged!: boolean;
 
   constructor(private http: HttpClient, private toastr: ToastrService, private spinner: NgxSpinnerService) { }
