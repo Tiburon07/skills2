@@ -27,7 +27,6 @@ export class MapManagerComponent implements OnInit {
 
   constructor(private spinner: NgxSpinnerService, private toaster: ToastrService) {}
 
-
   ngOnInit(): void {
 
     this.map = L.map('mapid').setView([41.902782, 12.496366], 11);
@@ -59,21 +58,40 @@ export class MapManagerComponent implements OnInit {
   }*/
 
   onLocationFound(e: { accuracy: any; latlng: L.LatLngLiteral | L.LatLngTuple; }): void {
+
+/*    this.toaster.success('geolocalizzaione attiva!');
+    $('#back-to-top').removeClass('btn-primary').addClass('btn-success');*/
     let radius = e.accuracy;
     let icon = {
       icon: L.icon({
         iconSize: [25, 41],
-        iconAnchor: [13, 0],
+        iconAnchor: [13, 40],
+        popupAnchor: [0, -28],
         // specify the path here
         iconUrl: '/assets/img/markers/marker-icon.png',
         shadowUrl: '/assets/img/markers/marker-shadow.png'
       })
     };
+
+/*    let icon2 = {
+      icon: L.icon({
+        iconSize: [38, 95],
+        iconAnchor: [22, 94],
+        popupAnchor: [-3, -76],
+        // specify the path here
+        iconUrl: '/assets/img/markers/maps-and-flags.png',
+        shadowUrl: '/assets/img/markers/marker-shadow.png'
+      })
+    };*/
+
     L.marker(e.latlng, icon).addTo(this.map).bindPopup('Sono qui!')//.openPopup(e.latlng);
+    //L.marker([e.latlng.lat + 0.001, e.latlng.lng + 0.001], icon2).addTo(this.map).bindPopup('Sono qui!')//.openPopup(e.latlng);
     L.circle(e.latlng, radius).addTo(this.map);
   }
 
   onLocationError(e: { message: any; }) {
+/*    this.toaster.error('Geolocalizzazione non attiva');
+    $('#back-to-top').removeClass('btn-success').addClass('btn-primary');*/
     this.toaster.error(e.message);
   }
 
