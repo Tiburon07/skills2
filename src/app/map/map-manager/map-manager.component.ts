@@ -22,7 +22,7 @@ export class MapManagerComponent implements OnInit {
     id: 'mapbox/streets-v11',
     tileSize: 512,
     zoomOffset: -1,
-    accessToken: 'your.mapbox.access.token'
+    accessToken: 'your.mapbox.access.token',
   }
 
   constructor(private spinner: NgxSpinnerService, private toaster: ToastrService) {}
@@ -32,6 +32,7 @@ export class MapManagerComponent implements OnInit {
 
     this.map = L.map('mapid').setView([41.902782, 12.496366], 11);
     L.tileLayer(this.tileLayer, this.mapOptions).addTo(this.map);
+    this.map.removeControl(this.map.zoomControl)
 
     //this.locationHome.bind(this)();
 
