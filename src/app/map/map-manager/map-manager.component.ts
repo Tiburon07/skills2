@@ -52,7 +52,7 @@ export class MapManagerComponent implements OnInit {
     this.map.removeControl(this.map.zoomControl)
 
    //EVENT MAP
-    this.map.locate({ setView: true, maxZoom: 16 });
+    this.map.locate({ setView: true, maxZoom: 11 });
     this.map.on('locationfound', this.onLocationFound.bind(this));
     this.map.on('locationerror', this.onLocationError.bind(this));
     this.map.on('click', this.onMapClick.bind(this));
