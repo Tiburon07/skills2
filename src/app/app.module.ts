@@ -8,6 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http'
 import { NgxSpinnerModule } from "ngx-spinner";
 
+
 //Currency format
 registerLocaleData(localeIt);
 

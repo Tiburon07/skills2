@@ -4,7 +4,7 @@ import * as $ from 'jquery';
 import { NgxSpinnerService } from "ngx-spinner";
 import { ToastrService } from 'ngx-toastr';
 import { from, fromEvent, of } from 'rxjs';
-import { tap, map, switchMap, debounceTime, filter, catchError, distinct,  } from 'rxjs/operators';
+import { tap, map, switchMap, debounceTime, filter, catchError, distinct, } from 'rxjs/operators';
 
 interface MunicipoFeature {
   geometry: {
@@ -77,7 +77,8 @@ export class MapManagerComponent implements OnInit {
     this.map.on('locationfound', this.onLocationFound.bind(this));
     this.map.on('locationerror', this.onLocationError.bind(this));
     this.map.on('click', this.onMapClick.bind(this));
-    this.municipiMap()
+    this.municipiMap();
+   
   }
 
   onLocationFound(e: { accuracy: any; latlng: L.LatLngLiteral | L.LatLngTuple; }): void {
@@ -136,6 +137,7 @@ export class MapManagerComponent implements OnInit {
       switchMap((data: MunicipiFeatureCollection) => from(data.features) || []),
       distinct((municipioFeature: MunicipoFeature) => municipioFeature.properties.prov_acr)
     ).subscribe(municipio => {
+      console.log(municipio);
       $('#map_province').append(new Option(municipio.properties.prov_name, municipio.properties.prov_acr))
     });
   }
@@ -156,6 +158,8 @@ export class MapManagerComponent implements OnInit {
   }
 
   onClickMapMenu(e: any) {
+    //Lancio select due per province e comumi
+    //$('.select2').select2();
     this.sortProvince();
   }
 
