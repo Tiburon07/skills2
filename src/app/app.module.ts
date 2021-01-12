@@ -15,7 +15,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
 import { MenuComponent } from './menu/menu.component';
-import { SettingsComponent } from './settings/settings.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { FooterComponent } from './footer/footer.component';
 import { ProfileComponent } from './profile/profile.component';
@@ -41,7 +40,6 @@ import { SignupComponent } from './ums/signup/signup.component';
     AppComponent,
     HeaderComponent,
     MenuComponent,
-    SettingsComponent,
     DashboardComponent,
     FooterComponent,
     ProfileComponent,

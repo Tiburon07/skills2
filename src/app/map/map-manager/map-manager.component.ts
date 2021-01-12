@@ -107,7 +107,7 @@ export class MapManagerComponent implements OnInit {
   displayMunicipio(municipio: any) {
     L.geoJSON(municipio, { style: { fillOpacity: 0, weight: 0.3 } })
       .addTo(this.map)
-      .on('mouseover', function (e) { e.target.setStyle({ fillOpacity: 0.3 }) })
-      .on('mouseout', function (e) { e.target.setStyle({ fillOpacity: 0 }) })
+      .on('click', function (e) { e.target.setStyle({ fillOpacity: 0.3 }) })
+      //.on('mouseout', function (e) { e.target.setStyle({ fillOpacity: 0 }) })
   }
 }
