@@ -110,7 +110,9 @@ export class MapManagerComponent implements OnInit {
       onEachFeature: this.onEachFeature
     })
     .addTo(this.map)
-    .on('click', function (e) { e.target.setStyle({ fillOpacity: 0.3 }) })
+      .on('click', function (e) {
+        (e.sourceTarget.options.fillOpacity == 0) ? e.target.setStyle({ fillOpacity: 0.3 }) : e.target.setStyle({ fillOpacity: 0});
+      })
       //.on('mouseout', function (e) { e.target.setStyle({ fillOpacity: 0 }) })
   }
 
