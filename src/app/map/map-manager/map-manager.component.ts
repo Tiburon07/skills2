@@ -4,14 +4,29 @@ import * as $ from 'jquery';
 import { NgxSpinnerService } from "ngx-spinner";
 import { ToastrService } from 'ngx-toastr';
 import { from, fromEvent, of } from 'rxjs';
-import { tap, map, switchMap, debounceTime, filter, catchError } from 'rxjs/operators';
+import { tap, map, switchMap, debounceTime, filter, catchError, distinct,  } from 'rxjs/operators';
 
 interface MunicipoFeature {
   geometry: {
     type: string;
     coordinates: [];
   };
-  properties: {};
+  properties: {
+    com_catasto_code: string;
+    com_istat_code: string;
+    com_istat_code_num: number;
+    minint_elettorale: string;
+    name: string;
+    op_id: string;
+    opdm_id: string;
+    prov_acr: string;
+    prov_istat_code: string;
+    prov_istat_code_num: number;
+    prov_name: string;
+    reg_istat_code: string
+    reg_istat_code_num: number
+    reg_name: string
+  };
   type: string;
 }
 
@@ -19,6 +34,11 @@ interface MunicipiFeatureCollection {
   type: string;
   features: [];
   crs: {}
+}
+
+interface Provincia {
+  codice: string;
+  nome: string
 }
 
 @Component({
@@ -30,7 +50,8 @@ export class MapManagerComponent implements OnInit {
 
   map!: L.Map;
 
-  private municipiFeature: L.Polygon[] = []
+  private listaProvice!: MunicipoFeature[];
+  private listaComuniByProvinciaSel!: MunicipoFeature[];
 
   private tileLayer = 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoidGlidXJvbjA3IiwiYSI6ImNramZ2em85NzNwZDQycG52M3NqbTZsbzQifQ.PyUsvBL-12oKzBldB2CPuA';
 
@@ -88,19 +109,34 @@ export class MapManagerComponent implements OnInit {
   }
 
   getMunicipi() {
-    return fetch('/assets/geojson/municipi.geojson', {method: 'GET'})
-      .then(res => res.json())
+    this.spinner.show();
+    return fetch('/assets/geojson/municipi.geojson', { method: 'GET' })
+      .then(res => {
+        this.spinner.hide();
+        return res.json();
+      })
       .catch(err => {
+        this.spinner.hide();
         this.toaster.error(err);
       });
   }
 
   municipiMap() {
     const p = this.getMunicipi()
+
+    //Carico le features
     from(p).pipe(
       switchMap((data: MunicipiFeatureCollection) => from(data.features) || []),
     ).subscribe((municipioFeature: MunicipoFeature) => {
       this.displayMunicipio(municipioFeature);
+    });
+
+    //Imposto la lista delle province filtrando tra i municipi
+    from(p).pipe(
+      switchMap((data: MunicipiFeatureCollection) => from(data.features) || []),
+      distinct((municipioFeature: MunicipoFeature) => municipioFeature.properties.prov_acr)
+    ).subscribe(municipio => {
+      $('#map_province').append(new Option(municipio.properties.prov_name, municipio.properties.prov_acr))
     });
   }
 
@@ -110,12 +146,23 @@ export class MapManagerComponent implements OnInit {
       onEachFeature: this.onEachFeature
     })
     .addTo(this.map)
-    //on('click', function (e) {(e.sourceTarget.options.fillOpacity == 0) ? e.target.setStyle({ fillOpacity: 0.3 }) : e.target.setStyle({ fillOpacity: 0});})
+    .on('click', function (e) {(e.sourceTarget.options.fillOpacity == 0) ? e.target.setStyle({ fillOpacity: 0.3 }) : e.target.setStyle({ fillOpacity: 0});})
   }
 
   onEachFeature(feature:any, layer: any) {
     if (feature.properties && feature.properties.name) {
       layer.bindPopup(feature.properties.name);
     }
+  }
+
+  onClickMapMenu(e: any) {
+    this.sortProvince();
+  }
+
+  sortProvince() {
+    var sel = $('#map_province');
+    var opts_list = sel.find('option');
+    (<any>opts_list).sort((a: any, b: any) => { return $(a).text() > $(b).text() ? 1 : -1; });
+    sel.empty().append(opts_list).val('');
   }
 }
