@@ -71,7 +71,7 @@ export class MapManagerComponent implements OnInit {
       })
     };
 
-    L.marker(e.latlng, icon).addTo(this.map).bindPopup('El Tiburon')//.openPopup(e.latlng);
+    L.marker(e.latlng, icon).addTo(this.map).bindPopup('Sono qui!')
     L.circle(e.latlng, radius).addTo(this.map);
   }
 
@@ -105,9 +105,18 @@ export class MapManagerComponent implements OnInit {
   }
 
   displayMunicipio(municipio: any) {
-    L.geoJSON(municipio, { style: { fillOpacity: 0, weight: 0.3 } })
-      .addTo(this.map)
-      .on('click', function (e) { e.target.setStyle({ fillOpacity: 0.3 }) })
+    L.geoJSON(municipio, {
+      style: { fillOpacity: 0, weight: 0.3 },
+      onEachFeature: this.onEachFeature
+    })
+    .addTo(this.map)
+    .on('click', function (e) { e.target.setStyle({ fillOpacity: 0.3 }) })
       //.on('mouseout', function (e) { e.target.setStyle({ fillOpacity: 0 }) })
+  }
+
+  onEachFeature(feature:any, layer: any) {
+    if (feature.properties && feature.properties.name) {
+      layer.bindPopup(feature.properties.name);
+    }
   }
 }
