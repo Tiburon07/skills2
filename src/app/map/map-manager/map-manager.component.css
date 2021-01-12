@@ -3,3 +3,11 @@
   width: 100%;
 }
 
+.map-menu {
+  bottom: 4.25rem;
+  position: fixed;
+  right: 1.25rem;
+  z-index: 1032;
+  border-radius: 40px;
+}
+

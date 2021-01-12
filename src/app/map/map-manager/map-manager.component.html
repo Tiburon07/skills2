@@ -1,24 +1,25 @@
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
-  <!-- Content Header (Page header) -->
-<!--  <section class="content-header">-->
-    <!--<div class="container-fluid">-->
-<!--      <div class="row mb-2">
-        <div class="col-sm-6">
-          <h1>Mappa</h1>
-        </div>
-        <div class="col-sm-6">
-          <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item"><a href="#">Home</a></li>
-            <li class="breadcrumb-item active">Mappa</li>
-          </ol>
-        </div>
-      </div>-->
-        <div id="mapid"></div>
-    <!--</div>--><!-- /.container-fluid -->
-<!--  </section>-->
-
-  <!-- Main content -->
-  <!-- /.content -->
+  <div id="mapid"></div>
+  <button id="" data-widget="control-sidebar" data-slide="true" class="btn btn-secondary map-menu" role="button" aria-label="Map menu"><i class="fas fa-bars"></i></button>
 </div>
+<aside class="control-sidebar control-sidebar-dark">
+  <!-- Input Search -->
+  <div class="p-3 control-sidebar-content">
+    <div class="row">
+      <div class="col-12">
+        <form action="simple-results.html">
+          <div class="input-group input-group-sm">
+            <input id="bookSearchInput" #bookSearchInput type="search" class="form-control form-control-sm" placeholder="Comune" value="">
+            <div class="input-group-append">
+              <button title="Reset" type="button" class="btn btn-sm btn-default">
+                <i class="fa fa-search"></i>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</aside>
 <!-- /.content-wrapper -->
