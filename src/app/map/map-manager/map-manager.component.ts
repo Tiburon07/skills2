@@ -153,7 +153,10 @@ export class MapManagerComponent implements OnInit {
 
   onEachFeature(feature:any, layer: any) {
     if (feature.properties && feature.properties.name) {
-      layer.bindPopup(feature.properties.name);
+      let bodyPopUp = `<strong>Regione: </strong>${feature.properties.reg_name} </br>
+                       <strong>Provincia: </strong>${feature.properties.prov_name} (${feature.properties.prov_acr}) </br>
+                       <strong>Comune: </strong>${feature.properties.name} (${feature.properties.com_catasto_code})`
+      layer.bindPopup(bodyPopUp);
     }
   }
 
