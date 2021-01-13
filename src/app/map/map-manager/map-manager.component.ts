@@ -86,7 +86,7 @@ export class MapManagerComponent implements OnInit {
     this.markerLoc = L.marker([41.902782, 12.496366], { icon: L.icon({ iconSize: [25, 41], iconAnchor: [13, 41], popupAnchor: [0, -28], iconUrl: '/assets/img/markers/marker-icon.png', shadowUrl: '/assets/img/markers/marker-shadow.png' }) }).addTo(this.map)
     this.circleLoc = L.circle([41.902782, 12.496366], 10).addTo(this.map)
     //EVENT GeoLocation
-    setInterval(() => {this.map.locate();}, 2000)//{ setView: true, maxZoom: 11 });}, 1000) //Geolocation
+    setInterval(() => {this.map.locate();}, 3000)//{ setView: true, maxZoom: 11 });}, 1000) //Geolocation
     this.map.on('locationfound', this.onLocationFound.bind(this));
     this.map.on('locationerror', this.onLocationError.bind(this));
 
