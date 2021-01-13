@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { resolveAny } from 'dns';
 import * as $ from 'jquery';
 import * as L from 'leaflet';
 import 'leaflet.heat'
