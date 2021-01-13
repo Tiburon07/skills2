@@ -199,7 +199,22 @@ export class MapManagerComponent implements OnInit {
       //onEachFeature: this.onEachFeature
     })
     .addTo(this.map)
-    .on('click', function (e) {(e.sourceTarget.options.fillOpacity == 0) ? e.target.setStyle({ fillOpacity: 0.3 }) : e.target.setStyle({ fillOpacity: 0});})
+/*      .on('click', function (e) {
+        (e.sourceTarget.options.fillOpacity == 0) ? e.target.setStyle({ fillOpacity: 0.3 }) : e.target.setStyle({ fillOpacity: 0 });
+      })*/
+      .on('click', this.opacityMunicipi.bind(this))
+  }
+
+  opacityMunicipi(municipi: any) {
+/*    this.map.eachLayer((layer: any) => {
+      if (layer.feature && layer.feature.geometry.type == 'MultiPolygon' && layer.options && layer.options.style && layer.defaultOptions && layer.defaultOptions.style) {
+        layer.defaultOptions.style.fillOpacity = 0;
+        layer.options.style.fillOpacity = 0
+        layer.options.fillOpacity = 0
+      }
+    });
+    municipi.target.setStyle({ fillOpacity: 0.3 });*/
+    (municipi.sourceTarget.options.fillOpacity == 0) ? municipi.target.setStyle({ fillOpacity: 0.3 }) : municipi.target.setStyle({ fillOpacity: 0 });
   }
 
   onEachFeature(feature:any, layer: any) {
