@@ -45,9 +45,6 @@
               "node_modules/admin-lte/plugins/jquery-ui/jquery-ui.min.js",
               "src/assets/js/resolveConflictBootstrapJquery.js",
               "node_modules/admin-lte/plugins/chart.js/Chart.min.js",
-              //"node_modules/admin-lte/plugins/sparklines/sparkline.js",
-              //"node_modules/admin-lte/plugins/jqvmap/jquery.vmap.min.js",
-              //"node_modules/admin-lte/plugins/jqvmap/maps/jquery.vmap.usa.js",
               "node_modules/admin-lte/plugins/jquery-knob/jquery.knob.min.js",
               "node_modules/admin-lte/plugins/moment/moment.min.js",
               "node_modules/admin-lte/plugins/daterangepicker/daterangepicker.js",
@@ -57,7 +54,6 @@
               "node_modules/admin-lte/plugins/toastr/toastr.min.js",
               "node_modules/admin-lte/dist/js/adminlte.js",
               "node_modules/admin-lte/dist/js/demo.js",
-              //"node_modules/admin-lte/dist/js/pages/dashboard.js",
               "node_modules/leaflet/dist/leaflet.js"
             ]
           },
