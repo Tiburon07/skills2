@@ -82,7 +82,7 @@ export class MapManagerComponent implements OnInit {
     this.map.locate({ setView: true, maxZoom: 11 });
     this.map.on('locationfound', this.onLocationFound.bind(this));
     this.map.on('locationerror', this.onLocationError.bind(this));
-    this.map.on('click', this.onMapClick.bind(this));
+    //this.map.on('click', this.onMapClick.bind(this));
     this.municipiMap();
     this.clasterMunicipiMap();
   }
@@ -196,7 +196,7 @@ export class MapManagerComponent implements OnInit {
   displayMunicipio(municipio: any) {
     L.geoJSON(municipio, {
       style: { fillOpacity: 0, weight: 0.3 },
-      onEachFeature: this.onEachFeature
+      //onEachFeature: this.onEachFeature
     })
     .addTo(this.map)
     .on('click', function (e) {(e.sourceTarget.options.fillOpacity == 0) ? e.target.setStyle({ fillOpacity: 0.3 }) : e.target.setStyle({ fillOpacity: 0});})
