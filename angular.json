@@ -38,7 +38,8 @@
               "node_modules/admin-lte/plugins/daterangepicker/daterangepicker.css",
               "node_modules/admin-lte/plugins/summernote/summernote-bs4.min.css",
               "node_modules/admin-lte/plugins/toastr/toastr.min.css",
-              "node_modules/leaflet/dist/leaflet.css"
+              "node_modules/leaflet/dist/leaflet.css",
+              "node_modules/leaflet.markercluster/dist/MarkerCluster.Default.css"
             ],
             "scripts": [
               "node_modules/admin-lte/plugins/jquery/jquery.min.js",

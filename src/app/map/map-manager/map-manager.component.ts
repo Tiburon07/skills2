@@ -1,9 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import * as $ from 'jquery';
-import * as L from 'leaflet';
-import 'leaflet.heat'
 import { NgxSpinnerService } from "ngx-spinner";
 import { ToastrService } from 'ngx-toastr';
+
+//Leaflet
+import * as L from 'leaflet';
+import 'leaflet.heat'
+import 'leaflet.markercluster'
+
+//RXJS
 import { from, fromEvent, of } from 'rxjs';
 import { tap, map, switchMap, debounceTime, filter, catchError, distinct, } from 'rxjs/operators';
 
@@ -79,27 +84,28 @@ export class MapManagerComponent implements OnInit {
     this.map.on('locationerror', this.onLocationError.bind(this));
     this.map.on('click', this.onMapClick.bind(this));
     this.municipiMap();
+    this.clasterMunicipiMap();
   }
 
-  onLocationFound(e): void {
+  onLocationFound(e:any): void {
     let radius = e.accuracy;
     let icon = { 
       icon: L.icon({
         iconSize: [25, 41],
         iconAnchor: [13, 41],
         popupAnchor: [0, -28],
-        iconUrl: '/assets/img/markers/marker-icon.png',
+        iconUrl: '/assets/img/markers/maps-and-flags.png',
         shadowUrl: '/assets/img/markers/marker-shadow.png'
       })
     };
 
-    L.marker(e.latlng, icon).addTo(this.map).bindPopup('Sono qui!')
+    //L.marker(e.latlng, icon).addTo(this.map).bindPopup('Sono qui!')
     L.circle(e.latlng, radius).addTo(this.map);
 
     L.heatLayer(
       [[e.latlng.lat, e.latlng.lng, (radius / 20)]],
       {
-        minOpacity: 0.8,
+        minOpacity: 5,
         radius: 18,
         gradient: { 0.4: 'blue', 0.65: 'lime', 1: 'red' }
       }
@@ -133,7 +139,7 @@ export class MapManagerComponent implements OnInit {
 
   getCoordMunicipi() {
     this.spinner.show();
-    return fetch('/assets/geojson/municipi.geojson', { method: 'GET' })
+    return fetch('/assets/geojson/coordinateComuni.geojson', { method: 'GET' })
       .then(res => {
         this.spinner.hide();
         return res.json();
@@ -159,6 +165,32 @@ export class MapManagerComponent implements OnInit {
       switchMap((data: MunicipiFeatureCollection) => from(data.features) || []),
       distinct((municipioFeature: MunicipoFeature) => municipioFeature.properties.prov_acr)
     ).subscribe(municipio => {$('#map_province').append(new Option(municipio.properties.prov_name, municipio.properties.prov_acr))});
+  }
+
+  clasterMunicipiMap() {
+    const p = this.getCoordMunicipi()
+
+    //Imposto la lista delle province filtrando tra i municipi
+    from(p).subscribe(municipi => { this.displayClaster(municipi) });
+  }
+
+  displayClaster(e: any) {
+    let icon = {
+      icon: L.icon({
+        iconSize: [40, 45],
+        iconAnchor: [13, 41],
+        popupAnchor: [0, -28],
+        iconUrl: '/assets/img/markers/location-pin.png',
+        shadowUrl: '/assets/img/markers/marker-shadow.png'
+      })
+    };
+    var markers = L.markerClusterGroup();
+    for (let i = 0; i < e.comuni.length - 2; i++) {
+      let lat = e.comuni[i]['lat'];
+      let lng = e.comuni[i]['lng'];
+      markers.addLayer(L.marker([lat, lng], icon));
+    }
+    this.map.addLayer(markers);
   }
 
   displayMunicipio(municipio: any) {
