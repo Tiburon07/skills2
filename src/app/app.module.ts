@@ -25,6 +25,7 @@ import { MapManagerComponent } from './map/map-manager/map-manager.component';
 
 //Leaflet
 import { LeafletModule } from "@asymmetrik/ngx-leaflet";
+import { MapManagerService } from './map/map-manager/map-manager-service';
 
 //UMS
 import { UsersComponent } from './ums/users/users.component';
@@ -68,7 +69,7 @@ import { SignupComponent } from './ums/signup/signup.component';
     NgxSpinnerModule,
     LeafletModule
   ],
-  providers: [UserService, GoogleBookService],
+  providers: [UserService, GoogleBookService, MapManagerService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -11,6 +11,7 @@ import 'leaflet.markercluster'
 //RXJS
 import { from, fromEvent, of } from 'rxjs';
 import { tap, map, switchMap, debounceTime, filter, catchError, distinct, } from 'rxjs/operators';
+import { MapManagerService } from './map-manager-service';
 
 interface MunicipoFeature {
   geometry: {
@@ -54,10 +55,12 @@ interface Provincia {
 })
 export class MapManagerComponent implements OnInit {
 
-  map!: L.Map;
+  private map!: L.Map;
+  private markerLoc!: L.Marker
+  private circleLoc!: L.Circle
 
-  private listaProvice!: MunicipoFeature[];
-  private listaComuniByProvinciaSel!: MunicipoFeature[];
+/*  private listaProvice!: MunicipoFeature[];
+  private listaComuniByProvinciaSel!: MunicipoFeature[];*/
 
   private tileLayer = 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoidGlidXJvbjA3IiwiYSI6ImNramZ2em85NzNwZDQycG52M3NqbTZsbzQifQ.PyUsvBL-12oKzBldB2CPuA';
 
@@ -70,7 +73,7 @@ export class MapManagerComponent implements OnInit {
     accessToken: 'your.mapbox.access.token',
   }
 
-  constructor(private spinner: NgxSpinnerService, private toaster: ToastrService) {}
+  constructor(private spinner: NgxSpinnerService, private toaster: ToastrService, private service: MapManagerService) { }
 
   ngOnInit(): void {
 
@@ -78,81 +81,31 @@ export class MapManagerComponent implements OnInit {
     L.tileLayer(this.tileLayer, this.mapOptions).addTo(this.map);
     this.map.removeControl(this.map.zoomControl)
 
-   //EVENT MAP
-    this.map.locate({ setView: true, maxZoom: 11 });
+    //GeoLocation
+    this.markerLoc = L.marker([41.902782, 12.496366], { icon: L.icon({ iconSize: [25, 41], iconAnchor: [13, 41], popupAnchor: [0, -28], iconUrl: '/assets/img/markers/marker-icon.png', shadowUrl: '/assets/img/markers/marker-shadow.png' }) }).addTo(this.map)
+    this.circleLoc = L.circle([41.902782, 12.496366], 10).addTo(this.map)
+    //EVENT GeoLocation
+    setInterval(() => {this.map.locate();}, 2000)//{ setView: true, maxZoom: 11 });}, 1000) //Geolocation
     this.map.on('locationfound', this.onLocationFound.bind(this));
     this.map.on('locationerror', this.onLocationError.bind(this));
-    //this.map.on('click', this.onMapClick.bind(this));
+
+    //Layers
     this.municipiMap();
     this.clasterMunicipiMap();
   }
 
   onLocationFound(e:any): void {
-    let radius = e.accuracy;
-    let icon = { 
-      icon: L.icon({
-        iconSize: [25, 41],
-        iconAnchor: [13, 41],
-        popupAnchor: [0, -28],
-        iconUrl: '/assets/img/markers/maps-and-flags.png',
-        shadowUrl: '/assets/img/markers/marker-shadow.png'
-      })
-    };
-
-    //L.marker(e.latlng, icon).addTo(this.map).bindPopup('Sono qui!')
-    L.circle(e.latlng, radius).addTo(this.map);
-
-    L.heatLayer(
-      [[e.latlng.lat, e.latlng.lng, (radius / 20)]],
-      {
-        minOpacity: 5,
-        radius: 18,
-        gradient: { 0.4: 'blue', 0.65: 'lime', 1: 'red' }
-      }
-    ).addTo(this.map)
+    this.markerLoc.setLatLng(e.latlng);
+    this.circleLoc.setLatLng(e.latlng)
+    this.circleLoc.setRadius(e.accuracy);
   }
 
   onLocationError(e: { message: any; }) {
     this.toaster.error(e.message);
   }
 
-  onMapClick(e: any) {
-    console.log(e);
-    L.popup()
-      .setLatLng(e.latlng)
-      .setContent(e.latlng.toString())
-      .openOn(this.map);
-  }
-
-  getMunicipi() {
-    this.spinner.show();
-    return fetch('/assets/geojson/municipi.geojson', { method: 'GET' })
-      .then(res => {
-        this.spinner.hide();
-        return res.json();
-      })
-      .catch(err => {
-        this.spinner.hide();
-        this.toaster.error(err);
-      });
-  }
-
-  getCoordMunicipi() {
-    this.spinner.show();
-    return fetch('/assets/geojson/coordinateComuni.geojson', { method: 'GET' })
-      .then(res => {
-        this.spinner.hide();
-        return res.json();
-      })
-      .catch(err => {
-        this.spinner.hide();
-        this.toaster.error(err);
-      });
-  }
-
   municipiMap() {
-    const p = this.getMunicipi()
-
+    const p = this.service.getMunicipi()
     //Carico le features
     from(p).pipe(
       switchMap((data: MunicipiFeatureCollection) => from(data.features) || []),
@@ -168,67 +121,28 @@ export class MapManagerComponent implements OnInit {
   }
 
   clasterMunicipiMap() {
-    const p = this.getCoordMunicipi()
-
-    //Imposto la lista delle province filtrando tra i municipi
+    const p = this.service.getCoordMunicipi()
     from(p).subscribe(municipi => { this.displayClaster(municipi) });
   }
 
   displayClaster(e: any) {
-    let icon = {
-      icon: L.icon({
-        iconSize: [40, 45],
-        iconAnchor: [13, 41],
-        popupAnchor: [0, -28],
-        iconUrl: '/assets/img/markers/location-pin.png',
-        shadowUrl: '/assets/img/markers/marker-shadow.png'
-      })
-    };
     var markers = L.markerClusterGroup();
-    for (let i = 0; i < e.comuni.length - 2; i++) {
-      let lat = e.comuni[i]['lat'];
-      let lng = e.comuni[i]['lng'];
-      markers.addLayer(L.marker([lat, lng], icon));
-    }
+    for (let i = 0; i < e.comuni.length - 2; i++)
+      markers.addLayer(L.marker([e.comuni[i]['lat'], e.comuni[i]['lng']], { icon: L.icon({ iconSize: [40, 45], iconAnchor: [13, 41], popupAnchor: [0, -28], iconUrl: '/assets/img/markers/location-pin.png', shadowUrl: '/assets/img/markers/marker-shadow.png' }) }));
     this.map.addLayer(markers);
   }
 
   displayMunicipio(municipio: any) {
-    L.geoJSON(municipio, {
-      style: { fillOpacity: 0, weight: 0.3 },
-      //onEachFeature: this.onEachFeature
-    })
-    .addTo(this.map)
-/*      .on('click', function (e) {
-        (e.sourceTarget.options.fillOpacity == 0) ? e.target.setStyle({ fillOpacity: 0.3 }) : e.target.setStyle({ fillOpacity: 0 });
-      })*/
+    L.geoJSON(municipio, {style: { fillOpacity: 0, weight: 0.3 }})
+      .addTo(this.map)
       .on('click', this.opacityMunicipi.bind(this))
   }
 
   opacityMunicipi(municipi: any) {
-/*    this.map.eachLayer((layer: any) => {
-      if (layer.feature && layer.feature.geometry.type == 'MultiPolygon' && layer.options && layer.options.style && layer.defaultOptions && layer.defaultOptions.style) {
-        layer.defaultOptions.style.fillOpacity = 0;
-        layer.options.style.fillOpacity = 0
-        layer.options.fillOpacity = 0
-      }
-    });
-    municipi.target.setStyle({ fillOpacity: 0.3 });*/
     (municipi.sourceTarget.options.fillOpacity == 0) ? municipi.target.setStyle({ fillOpacity: 0.3 }) : municipi.target.setStyle({ fillOpacity: 0 });
   }
 
-  onEachFeature(feature:any, layer: any) {
-    if (feature.properties && feature.properties.name) {
-      let bodyPopUp = `<strong>Regione: </strong>${feature.properties.reg_name} </br>
-                       <strong>Provincia: </strong>${feature.properties.prov_name} (${feature.properties.prov_acr}) </br>
-                       <strong>Comune: </strong>${feature.properties.name} (${feature.properties.com_catasto_code})`
-      layer.bindPopup(bodyPopUp);
-    }
-  }
-
   onClickMapMenu(e: any) {
-    //Lancio select due per province e comumi
-    //$('.select2').select2();
     this.sortSelect('map_province');
   }
 
@@ -239,3 +153,39 @@ export class MapManagerComponent implements OnInit {
     sel.empty().append(opts_list).val('');
   }
 }
+
+//Click Mappa
+/*onMapClick(e: any) {
+  console.log(e);
+  L.popup()
+    .setLatLng(e.latlng)
+    .setContent(e.latlng.toString())
+    .openOn(this.map);
+}*/
+
+//Ciclare le heature del geojson
+/*L.geoJSON(municipio, {
+  style: { fillOpacity: 0, weight: 0.3 }, //onEachFeature: this.onEachFeature
+})
+  .addTo(this.map)
+  .on('click', this.opacityMunicipi.bind(this))*/
+
+//Pop up click geojson
+/*onEachFeature(feature: any, layer: any) {
+  if (feature.properties && feature.properties.name) {
+    let bodyPopUp = `<strong>Regione: </strong>${feature.properties.reg_name} </br>
+                       <strong>Provincia: </strong>${feature.properties.prov_name} (${feature.properties.prov_acr}) </br>
+                       <strong>Comune: </strong>${feature.properties.name} (${feature.properties.com_catasto_code})`
+    layer.bindPopup(bodyPopUp);
+  }
+}*/
+
+//heatLayer
+/*L.heatLayer(
+  [[e.latlng.lat, e.latlng.lng, (radius / 20)]],
+  {
+    minOpacity: 5,
+    radius: 18,
+    gradient: { 0.4: 'blue', 0.65: 'lime', 1: 'red' }
+  }
+).addTo(this.map)*/
