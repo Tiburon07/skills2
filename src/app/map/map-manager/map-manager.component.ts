@@ -8,6 +8,7 @@ import * as L from 'leaflet';
 import 'leaflet.heat'
 import 'leaflet.markercluster'
 
+
 //RXJS
 import { from, fromEvent, of } from 'rxjs';
 import { tap, map, switchMap, debounceTime, filter, catchError, distinct, } from 'rxjs/operators';
@@ -133,9 +134,15 @@ export class MapManagerComponent implements OnInit {
   }
 
   displayMunicipio(municipio: any) {
-    L.geoJSON(municipio, {style: { fillOpacity: 0, weight: 0.3 }})
+    L.geoJSON(municipio, { style: { fillOpacity: 0, weight: 0.3 } })
       .addTo(this.map)
-      .on('click', this.opacityMunicipi.bind(this))
+      .on('click', function (e) {
+        if (e.sourceTarget.options.fillOpacity == 0) {
+          e.target.setStyle({ fillOpacity: 0.3 })
+        } else {
+          e.target.setStyle({ fillOpacity: 0 })
+        }
+      });//this.opacityMunicipi.bind(this))
   }
 
   opacityMunicipi(municipi: any) {
