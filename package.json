@@ -20,6 +20,7 @@
     "@angular/platform-browser-dynamic": "~11.0.5",
     "@angular/router": "~11.0.5",
     "@asymmetrik/ngx-leaflet": "^8.1.0",
+    "@types/leaflet.heat": "^0.2.0",
     "admin-lte": "^3.1.0-rc",
     "express": "^4.17.1",
     "leaflet": "^1.7.1",

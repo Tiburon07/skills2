@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { resolveAny } from 'dns';
 import * as $ from 'jquery';
 import * as L from 'leaflet';
-import 'leaflet.heat/dist/leaflet-heat.js'
+import 'leaflet.heat'
 import { NgxSpinnerService } from "ngx-spinner";
 import { ToastrService } from 'ngx-toastr';
 import { from, fromEvent, of } from 'rxjs';
@@ -81,7 +82,7 @@ export class MapManagerComponent implements OnInit {
     this.municipiMap();
   }
 
-  onLocationFound(e: { accuracy: any; latlng: L.LatLngLiteral | L.LatLngTuple; }): void {
+  onLocationFound(e): void {
     let radius = e.accuracy;
     let icon = { 
       icon: L.icon({
@@ -95,6 +96,7 @@ export class MapManagerComponent implements OnInit {
 
     L.marker(e.latlng, icon).addTo(this.map).bindPopup('Sono qui!')
     L.circle(e.latlng, radius).addTo(this.map);
+
     L.heatLayer(
       [[e.latlng.lat, e.latlng.lng, (radius / 20)]],
       {
