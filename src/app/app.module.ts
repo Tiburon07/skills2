@@ -23,6 +23,9 @@ import { ErrorComponent } from './error/error.component';
 import { ContactComponent } from './contact/contact.component';
 import { MapManagerComponent } from './map/map-manager/map-manager.component';
 
+//Leaflet
+import { LeafletModule } from "@asymmetrik/ngx-leaflet";
+
 //UMS
 import { UsersComponent } from './ums/users/users.component';
 import { UserService } from './ums/services/user.service';
@@ -62,7 +65,8 @@ import { SignupComponent } from './ums/signup/signup.component';
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
-    NgxSpinnerModule
+    NgxSpinnerModule,
+    LeafletModule
   ],
   providers: [UserService, GoogleBookService],
   bootstrap: [AppComponent]

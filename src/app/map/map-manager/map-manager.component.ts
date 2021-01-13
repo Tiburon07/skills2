@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import * as L from 'leaflet';
 import * as $ from 'jquery';
+import * as L from 'leaflet';
+import 'leaflet.heat/dist/leaflet-heat.js'
 import { NgxSpinnerService } from "ngx-spinner";
 import { ToastrService } from 'ngx-toastr';
 import { from, fromEvent, of } from 'rxjs';
@@ -78,7 +79,6 @@ export class MapManagerComponent implements OnInit {
     this.map.on('locationerror', this.onLocationError.bind(this));
     this.map.on('click', this.onMapClick.bind(this));
     this.municipiMap();
-   
   }
 
   onLocationFound(e: { accuracy: any; latlng: L.LatLngLiteral | L.LatLngTuple; }): void {
@@ -95,6 +95,14 @@ export class MapManagerComponent implements OnInit {
 
     L.marker(e.latlng, icon).addTo(this.map).bindPopup('Sono qui!')
     L.circle(e.latlng, radius).addTo(this.map);
+    L.heatLayer(
+      [[e.latlng.lat, e.latlng.lng, (radius / 20)]],
+      {
+        minOpacity: 0.8,
+        radius: 18,
+        gradient: { 0.4: 'blue', 0.65: 'lime', 1: 'red' }
+      }
+    ).addTo(this.map)
   }
 
   onLocationError(e: { message: any; }) {
@@ -122,6 +130,19 @@ export class MapManagerComponent implements OnInit {
       });
   }
 
+  getCoordMunicipi() {
+    this.spinner.show();
+    return fetch('/assets/geojson/municipi.geojson', { method: 'GET' })
+      .then(res => {
+        this.spinner.hide();
+        return res.json();
+      })
+      .catch(err => {
+        this.spinner.hide();
+        this.toaster.error(err);
+      });
+  }
+
   municipiMap() {
     const p = this.getMunicipi()
 
@@ -136,10 +157,7 @@ export class MapManagerComponent implements OnInit {
     from(p).pipe(
       switchMap((data: MunicipiFeatureCollection) => from(data.features) || []),
       distinct((municipioFeature: MunicipoFeature) => municipioFeature.properties.prov_acr)
-    ).subscribe(municipio => {
-      console.log(municipio);
-      $('#map_province').append(new Option(municipio.properties.prov_name, municipio.properties.prov_acr))
-    });
+    ).subscribe(municipio => {$('#map_province').append(new Option(municipio.properties.prov_name, municipio.properties.prov_acr))});
   }
 
   displayMunicipio(municipio: any) {
@@ -163,11 +181,11 @@ export class MapManagerComponent implements OnInit {
   onClickMapMenu(e: any) {
     //Lancio select due per province e comumi
     //$('.select2').select2();
-    this.sortProvince();
+    this.sortSelect('map_province');
   }
 
-  sortProvince() {
-    var sel = $('#map_province');
+  sortSelect(id:any) {
+    var sel = $(`#${id}`);
     var opts_list = sel.find('option');
     (<any>opts_list).sort((a: any, b: any) => { return $(a).text() > $(b).text() ? 1 : -1; });
     sel.empty().append(opts_list).val('');

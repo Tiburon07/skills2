@@ -53,8 +53,7 @@
               "node_modules/admin-lte/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js",
               "node_modules/admin-lte/plugins/toastr/toastr.min.js",
               "node_modules/admin-lte/dist/js/adminlte.js",
-              "node_modules/admin-lte/dist/js/demo.js",
-              "node_modules/leaflet/dist/leaflet.js"
+              "node_modules/admin-lte/dist/js/demo.js"
             ]
           },
           "configurations": {
