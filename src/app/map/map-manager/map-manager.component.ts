@@ -207,7 +207,10 @@ export class MapManagerComponent implements OnInit {
 
   onChangeGeoloc(e: any) {
     if (e.target.checked) {
-      this.autolocate = setInterval(() => { this.map.locate(); }, this.intervalGeoLoc*1000)
+      this.autolocate = setInterval(() => { this.map.locate(); }, this.intervalGeoLoc * 1000);
+      if ($('#switchTrack').prop('checked')) {
+        this.startTracking();
+      }
     } else {
       this.map.stopLocate()
       clearInterval(this.autolocate);
@@ -227,7 +230,7 @@ export class MapManagerComponent implements OnInit {
   }
 
   onChangeTracking(e: any){
-    if (e.target.checked) {
+    if (e.target.checked && $('#switchLoc').prop('checked')) {
       this.tracking = setInterval(() => {
         let radius = Math.min(200, this.posCurrent.accuracy / 2)
         radius = Math.max(10, radius)
@@ -250,6 +253,15 @@ export class MapManagerComponent implements OnInit {
         this.lyrBreadcrumbs.addLayer(mrkBreadcrumb);
       }, this.intervalTrack * 1000)
     }
+  }
+
+  startTracking() {
+    this.tracking = setInterval(() => {
+      let radius = Math.min(200, this.posCurrent.accuracy / 2)
+      radius = Math.max(10, radius)
+      let mrkBreadcrumb = L.circle([this.posCurrent.lat, this.posCurrent.lng], { radius: radius, color: 'green' }).addTo(this.map);
+      this.lyrBreadcrumbs.addLayer(mrkBreadcrumb);
+    }, this.intervalTrack * 1000)
   }
 }
 
