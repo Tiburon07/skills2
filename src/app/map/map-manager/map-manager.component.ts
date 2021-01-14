@@ -210,8 +210,8 @@ export class MapManagerComponent implements OnInit {
     if (e.target.checked) {
       this.autolocate = setInterval(() => { this.map.locate();}, this.interval*1000)
     } else {
-      clearInterval(this.autolocate);
       this.map.stopLocate()
+      clearInterval(this.autolocate);
       this.markerLoc.remove()
       this.circleLoc.remove()
       this.posCurrent = { lat: 0, lng: 0 };
