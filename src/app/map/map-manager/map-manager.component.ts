@@ -116,8 +116,8 @@ export class MapManagerComponent implements OnInit {
     this.circleLoc = L.circle([41.902782, 12.496366], 10)
 
     //Event GeoLocation
-    //setInterval(() => {this.map.locate();}, 2500)//{ setView: true, maxZoom: 11 });}, 1000) //Geolocation
-    this.map.locate()
+    setInterval(() => {this.map.locate();}, 2500)//{ setView: true, maxZoom: 11 });}, 1000) //Geolocation
+    //this.map.locate()
     this.map.on('locationfound', this.onLocationFound.bind(this));
     this.map.on('locationerror', this.onLocationError.bind(this));
       
