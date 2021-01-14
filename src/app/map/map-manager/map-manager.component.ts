@@ -52,6 +52,7 @@ interface Provincia {
 interface PosCurrent {
   lat: number;
   lng: number;
+  accuracy: number;
 }
 
 @Component({
@@ -79,14 +80,17 @@ export class MapManagerComponent implements OnInit {
   private objOverlays!: any;
   private confiniComune!: any;
   private centroComune!: any;
+  private lyrBreadcrumbs!: any;
 
   //  ********* Geolocalizzazione ****************
   private autolocate: any;
+  private tracking: any;
   private markerLoc!: L.Marker
   private circleLoc!: L.Circle
-  public posCurrent: PosCurrent = { lat: 0, lng: 0 };
+  public posCurrent: PosCurrent = { lat: 0, lng: 0, accuracy: 0};
   public posLastTime!: any;
-  public interval: number = 3;
+  public intervalGeoLoc: number = 3;
+  public intervalTrack: number = 6;
 
   private listaProvice!: MunicipoFeature[];
   private listaComuniByProvinciaSel!: MunicipoFeature[];
@@ -97,7 +101,8 @@ export class MapManagerComponent implements OnInit {
   constructor(private spinner: NgxSpinnerService, private toaster: ToastrService, private service: MapManagerService) {
     this.confiniComune = L.layerGroup();
     this.centroComune = L.layerGroup();
-    this.objOverlays = { 'Confini Comune': this.confiniComune, 'Centro Comune': this.centroComune};
+    this.lyrBreadcrumbs = L.layerGroup();
+    this.objOverlays = { 'Confini Comune': this.confiniComune, 'Centro Comune': this.centroComune, 'Monitoraggio': this.lyrBreadcrumbs};
     this.objBaseMaps = { "Street": L.tileLayer(this.lyrStreet, this.streetMapOptions), "Satellite": L.tileLayer(this.lyrSatellite, this.satelliteMapOptions)}
     this.ctlLayers = L.control.layers(this.objBaseMaps, this.objOverlays);
     this.ctlScale = L.control.scale({ position: 'bottomleft', metric: true, maxWidth: 200, imperial: false });
@@ -111,6 +116,7 @@ export class MapManagerComponent implements OnInit {
     this.map.addControl(this.ctlLayers);
     this.map.addControl(this.ctlScale);
     this.map.addLayer(this.objBaseMaps.Street);
+    this.map.addLayer(this.lyrBreadcrumbs);
 
     //GeoLocation
     this.markerLoc = L.marker([41.902782, 12.496366], {
@@ -134,7 +140,7 @@ export class MapManagerComponent implements OnInit {
     this.markerLoc.setLatLng(e.latlng).remove().addTo(this.map);
     this.circleLoc.setLatLng(e.latlng).remove().addTo(this.map);
     this.circleLoc.setRadius(e.accuracy);
-    this.posCurrent = e.latlng;
+    this.posCurrent = { lat: e.latlng.lat, lng: e.latlng.lng, accuracy: e.accuracy};
     this.posLastTime = new Date();
   }
 
@@ -198,25 +204,55 @@ export class MapManagerComponent implements OnInit {
     return e;
   }
 
-  sliderSecondsChange(e: any) {
-    this.interval = e.target.value;
-    clearInterval(this.autolocate);
-    this.autolocate = setInterval(() => { this.map.locate(); }, this.interval * 1000)
-  }
 
   onChangeGeoloc(e: any) {
     if (e.target.checked) {
-      this.autolocate = setInterval(() => { this.map.locate();}, this.interval*1000)
+      this.autolocate = setInterval(() => { this.map.locate(); }, this.intervalGeoLoc*1000)
     } else {
       this.map.stopLocate()
       clearInterval(this.autolocate);
       this.markerLoc.remove()
       this.circleLoc.remove()
-      this.posCurrent = { lat: 0, lng: 0 };
+      this.posCurrent = { lat: 0, lng: 0, accuracy: 0};
       this.posLastTime = null;
     }
   }
+
+  sliderSecondsChange(e: any) {
+    this.intervalGeoLoc = e.target.value;
+    if ($('#switchLoc').prop('checked')) {
+      clearInterval(this.autolocate);
+      this.autolocate = setInterval(() => { this.map.locate(); }, this.intervalGeoLoc * 1000)
+    }
+  }
+
+  onChangeTracking(e: any){
+    if (e.target.checked) {
+      this.tracking = setInterval(() => {
+        let radius = Math.min(200, this.posCurrent.accuracy / 2)
+        radius = Math.max(10, radius)
+        let mrkBreadcrumb = L.circle([this.posCurrent.lat, this.posCurrent.lng], { radius: radius, color: 'green' }).addTo(this.map);
+        this.lyrBreadcrumbs.addLayer(mrkBreadcrumb);
+      }, this.intervalTrack * 1000)
+    } else {
+      clearInterval(this.tracking);
+    }
+  }
+
+  sliderTrackSecondsChange(e: any) {
+    this.intervalTrack = e.target.value;
+    if ($('#switchLoc').prop('checked')) {
+      clearInterval(this.tracking);
+      this.tracking = setInterval(() => {
+        var radius = Math.min(200, this.posCurrent.accuracy / 2)
+        radius = Math.max(10, radius)
+        var mrkBreadcrumb = L.circle([this.posCurrent.lat, this.posCurrent.lng], { radius: radius, color: 'green' }).addTo(this.map);
+        this.lyrBreadcrumbs.addLayer(mrkBreadcrumb);
+      }, this.intervalTrack * 1000)
+    }
+  }
 }
+
 
 //Click Mappa
 /*onMapClick(e: any) {

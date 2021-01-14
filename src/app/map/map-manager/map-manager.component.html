@@ -10,44 +10,59 @@
     <div class="form-group">
       <div class="custom-control custom-switch">
         <input (change)="onChangeGeoloc($event)" type="checkbox" class="custom-control-input" id="switchLoc">
-        <label class="custom-control-label" for="switchLoc">Geolocalizzazione ({{interval}}s)</label>
+        <label class="custom-control-label" for="switchLoc">Geolocalizzazione ({{intervalGeoLoc}}s)</label>
       </div>
     </div>
     <div id="sldrAutolocate" class="row">
       <div class="col-1">3s</div>
       <div class="col-8">
-        <input (change)="sliderSecondsChange($event)" value="3" type="range" class="form-range mt-1" min="3" max="30" step="3" id="geoLocSecondsRange">
+        <input (change)="sliderSecondsChange($event)" value="3" type="range" class="custom-range mt-1" min="3" max="30" step="3" id="geoLocSecondsRange">
       </div>
       <div class="col-1"><p>30s</p></div>
     </div>
+    <div class="form-group">
+      <div class="custom-control custom-switch custom-switch-on-success">
+        <input (change)="onChangeTracking($event)" type="checkbox" class="custom-control-input" id="switchTrack">
+        <label class="custom-control-label" for="switchTrack">Monitoraggio ({{intervalTrack}}s)</label>
+      </div>
+    </div>
+    <div id="sldrTracking" class="row">
+      <div class="col-1">6s</div>
+      <div class="col-8">
+        <div class="form-group text-success">
+          <input (change)="sliderTrackSecondsChange($event)" value="6" type="range" class="custom-range custom-range-teal mt-1 " min="6" max="60" step="3" id="inpTrackingRange">
+        </div>
+      </div>
+      <div class="col-1"><p>60s</p></div>
+      </div>
     <div class="row">
       <div class="col-12">
         <p>Lat: {{posCurrent.lat}}</p>
         <p>Lng: {{posCurrent.lng}}</p>
         <p>Ora: {{posLastTime | date:'HH:mm:ss'}}</p>
         <!--        <form>
-                      <div class="form-group-sm mb-1">
-                  <label for="map_regione">Regione</label>
-                  <select id="map_regione" class=" form-control form-control-sm"></select>
-                </div>
-            <div class="form-group-sm mb-1">
-              <label for="map_provincia">Provincia</label>
-              <select id="map_province" class=" form-control form-control-sm"></select>
-            </div>
-                      <div class="form-group-sm mb-1">
-                  <label for="map_comuni">Comune</label>
-                  <select id="map_comuni" class=" form-control form-control-sm"></select>
-                </div>
-            <label for="map_provincia">Comune</label>
-          <div class="input-group input-group-sm">
-            <input id="bookSearchInput" #bookSearchInput type="search" class="form-control form-control-sm" placeholder="Comune" value="">
-            <div class="input-group-append">
-              <button title="Reset" type="button" class="btn btn-sm btn-secondary">
-                <i class="fa fa-search"></i>
-              </button>
-            </div>
+                    <div class="form-group-sm mb-1">
+                <label for="map_regione">Regione</label>
+                <select id="map_regione" class=" form-control form-control-sm"></select>
+              </div>
+          <div class="form-group-sm mb-1">
+            <label for="map_provincia">Provincia</label>
+            <select id="map_province" class=" form-control form-control-sm"></select>
           </div>
-          </form>-->
+                    <div class="form-group-sm mb-1">
+                <label for="map_comuni">Comune</label>
+                <select id="map_comuni" class=" form-control form-control-sm"></select>
+              </div>
+          <label for="map_provincia">Comune</label>
+        <div class="input-group input-group-sm">
+          <input id="bookSearchInput" #bookSearchInput type="search" class="form-control form-control-sm" placeholder="Comune" value="">
+          <div class="input-group-append">
+            <button title="Reset" type="button" class="btn btn-sm btn-secondary">
+              <i class="fa fa-search"></i>
+            </button>
+          </div>
+        </div>
+        </form>-->
       </div>
     </div>
   </div>

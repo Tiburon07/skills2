@@ -35,3 +35,8 @@
     width: 9.5rem!important;
 }
 
+#inpTrackingRange {
+  background: 'green';
+  background-size: 480px;
+}
+
