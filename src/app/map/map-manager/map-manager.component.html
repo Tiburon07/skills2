@@ -7,34 +7,40 @@
 <aside class="control-sidebar control-sidebar-dark">
   <!-- Container INFO -->
   <div *ngIf="sideBar == 'info'" class="p-3 control-sidebar-content">
+    <div class="form-group">
+      <div class="custom-control custom-switch">
+        <input (change)="onChangeGeoloc($event)" type="checkbox" class="custom-control-input" id="switchLoc">
+        <label class="custom-control-label" for="switchLoc">Geolocalizzazione</label>
+      </div>
+    </div>
     <div class="row">
       <div class="col-12">
         <p>Lat: {{posCurrent.lat}}</p>
         <p>Lng: {{posCurrent.lng}}</p>
-        <p>Ora {{posLastTime | date:'HH:mm:ss'}}</p>
-        <form>
-          <!--          <div class="form-group-sm mb-1">
-                <label for="map_regione">Regione</label>
-                <select id="map_regione" class=" form-control form-control-sm"></select>
-              </div>-->
-<!--          <div class="form-group-sm mb-1">
-            <label for="map_provincia">Provincia</label>
-            <select id="map_province" class=" form-control form-control-sm"></select>
-          </div>-->
-          <!--          <div class="form-group-sm mb-1">
-                <label for="map_comuni">Comune</label>
-                <select id="map_comuni" class=" form-control form-control-sm"></select>
-              </div>-->
-          <!--<label for="map_provincia">Comune</label>
-        <div class="input-group input-group-sm">
-          <input id="bookSearchInput" #bookSearchInput type="search" class="form-control form-control-sm" placeholder="Comune" value="">
-          <div class="input-group-append">
-            <button title="Reset" type="button" class="btn btn-sm btn-secondary">
-              <i class="fa fa-search"></i>
-            </button>
-          </div>
-        </div>-->
-        </form>
+        <p>Ora: {{posLastTime | date:'HH:mm:ss'}}</p>
+        <!--        <form>
+                          <div class="form-group-sm mb-1">
+                      <label for="map_regione">Regione</label>
+                      <select id="map_regione" class=" form-control form-control-sm"></select>
+                    </div>
+                <div class="form-group-sm mb-1">
+                  <label for="map_provincia">Provincia</label>
+                  <select id="map_province" class=" form-control form-control-sm"></select>
+                </div>
+                          <div class="form-group-sm mb-1">
+                      <label for="map_comuni">Comune</label>
+                      <select id="map_comuni" class=" form-control form-control-sm"></select>
+                    </div>
+                <label for="map_provincia">Comune</label>
+              <div class="input-group input-group-sm">
+                <input id="bookSearchInput" #bookSearchInput type="search" class="form-control form-control-sm" placeholder="Comune" value="">
+                <div class="input-group-append">
+                  <button title="Reset" type="button" class="btn btn-sm btn-secondary">
+                    <i class="fa fa-search"></i>
+                  </button>
+                </div>
+              </div>
+              </form>-->
       </div>
     </div>
   </div>

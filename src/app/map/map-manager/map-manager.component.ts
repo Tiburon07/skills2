@@ -73,11 +73,15 @@ export class MapManagerComponent implements OnInit {
   private lyrStreet = 'https://api.mapbox.com/styles/v1/tiburon07/ckjwqwp000hcv17q7s817olxj/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoidGlidXJvbjA3IiwiYSI6ImNramZ2em85NzNwZDQycG52M3NqbTZsbzQifQ.PyUsvBL-12oKzBldB2CPuA';
   private lyrSatellite = 'https://api.mapbox.com/styles/v1/tiburon07/ckjwqunda0eyr17o1u589jqro/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoidGlidXJvbjA3IiwiYSI6ImNramZ2em85NzNwZDQycG52M3NqbTZsbzQifQ.PyUsvBL-12oKzBldB2CPuA';
 
+
   //  ********* Setup Layer COntrol****************
   private objBaseMaps!: any; 
   private objOverlays!: any;
+  private confiniComune!: any;
+  private centroComune!: any;
 
   //  ********* Geolocalizzazione ****************
+  private autolocate: any;
   private markerLoc!: L.Marker
   private circleLoc!: L.Circle
   public posCurrent: PosCurrent = { lat: 0, lng: 0 };
@@ -86,17 +90,16 @@ export class MapManagerComponent implements OnInit {
   private listaProvice!: MunicipoFeature[];
   private listaComuniByProvinciaSel!: MunicipoFeature[];
 
-
   private streetMapOptions = { attribution: '', maxZoom: 18, id: 'street', tileSize: 512, zoomOffset: -1, accessToken: 'no-token' }
   private satelliteMapOptions = { attribution: '', maxZoom: 18, id: 'satellite', tileSize: 512, zoomOffset: -1, accessToken: 'no-token' }
 
   constructor(private spinner: NgxSpinnerService, private toaster: ToastrService, private service: MapManagerService) {
-
+    this.confiniComune = L.layerGroup();
+    this.centroComune = L.layerGroup();
+    this.objOverlays = { 'Confini Comune': this.confiniComune, 'Centro Comune': this.centroComune};
     this.objBaseMaps = { "Street": L.tileLayer(this.lyrStreet, this.streetMapOptions), "Satellite": L.tileLayer(this.lyrSatellite, this.satelliteMapOptions)}
     this.ctlLayers = L.control.layers(this.objBaseMaps, this.objOverlays);
-    //this.ctlMeasure = L.control.polylineMeasure({ position: 'topright' });
     this.ctlScale = L.control.scale({ position: 'bottomleft', metric: true, maxWidth: 200, imperial: false });
-
   }
 
   ngOnInit(): void {
@@ -116,7 +119,7 @@ export class MapManagerComponent implements OnInit {
     this.circleLoc = L.circle([41.902782, 12.496366], 10)
 
     //Event GeoLocation
-    setInterval(() => {this.map.locate();}, 2500)//{ setView: true, maxZoom: 11 });}, 1000) //Geolocation
+    //{ setView: true, maxZoom: 11 });}, 1000) //Geolocation
     //this.map.locate()
     this.map.on('locationfound', this.onLocationFound.bind(this));
     this.map.on('locationerror', this.onLocationError.bind(this));
@@ -129,9 +132,9 @@ export class MapManagerComponent implements OnInit {
   onLocationFound(e: any): void {
     this.markerLoc.setLatLng(e.latlng).remove().addTo(this.map);
     this.circleLoc.setLatLng(e.latlng).remove().addTo(this.map);
-    this.circleLoc.setRadius(e.accuracy / 2);
+    this.circleLoc.setRadius(e.accuracy);
     this.posCurrent = e.latlng;
-    this.posLastTime! = new Date();
+    this.posLastTime = new Date();
   }
 
   onLocationError(e: { message: any; }) {
@@ -163,20 +166,12 @@ export class MapManagerComponent implements OnInit {
     var markers = L.markerClusterGroup();
     for (let i = 0; i < e.comuni.length - 2; i++)
       markers.addLayer(L.marker([e.comuni[i]['lat'], e.comuni[i]['lng']], { icon: L.icon({ iconSize: [40, 45], iconAnchor: [13, 41], popupAnchor: [0, -28], iconUrl: '/assets/img/markers/location-pin.png', shadowUrl: '/assets/img/markers/marker-shadow.png' }) }));
-    this.map.addLayer(markers);
+/*    this.map.addLayer(markers);*/
+    this.centroComune.addLayer(markers);
   }
 
   displayMunicipio(municipio: any) {
-    L.geoJSON(municipio, { style: { fillOpacity: 0, weight: 0.3 } })
-      .addTo(this.map)
-/*      .on('click', function (e) {
-        if (e.sourceTarget.options.fillOpacity == 0) {
-          e.target.setStyle({ fillOpacity: 0.3 })
-        } else {
-          e.target.setStyle({ fillOpacity: 0 })
-        }
-      }
-      );//this.opacityMunicipi.bind(this))*/
+    this.confiniComune.addLayer(L.geoJSON(municipio, { style: { fillOpacity: 0, weight: 0.3 }}))
   }
 
   opacityMunicipi(municipi: any) {
@@ -201,6 +196,19 @@ export class MapManagerComponent implements OnInit {
     e.longitude = e.longitude + offsetY;
     e.latlng = L.latLng([e.latitude, e.longitude]);
     return e;
+  }
+
+  onChangeGeoloc(e: any) {
+    if (e.target.checked) {
+      this.autolocate = setInterval(() => { this.map.locate(); }, 2500)
+    } else {
+      clearInterval(this.autolocate);
+      this.map.stopLocate()
+      this.markerLoc.remove()
+      this.circleLoc.remove()
+      this.posCurrent = { lat: 0, lng: 0 };
+      this.posLastTime = null;
+    }
   }
 }
 
