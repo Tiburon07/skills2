@@ -49,6 +49,11 @@ interface Provincia {
   nome: string
 }
 
+interface PosCurrent {
+  lat: number;
+  lng: number;
+}
+
 @Component({
   selector: 'app-map-manager',
   templateUrl: './map-manager.component.html',
@@ -75,8 +80,8 @@ export class MapManagerComponent implements OnInit {
   //  ********* Geolocalizzazione ****************
   private markerLoc!: L.Marker
   private circleLoc!: L.Circle
-  private posCurrent!: any;
-  private posLastTime!: any;
+  public posCurrent: PosCurrent = { lat: 0, lng: 0 };
+  public posLastTime!: any;
 
   private listaProvice!: MunicipoFeature[];
   private listaComuniByProvinciaSel!: MunicipoFeature[];
