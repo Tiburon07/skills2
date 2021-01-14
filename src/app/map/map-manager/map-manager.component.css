@@ -3,8 +3,16 @@
   width: 100%;
 }
 
-.map-menu {
+.map-menu{
   bottom: 4.25rem;
+  position: fixed;
+  right: 1.25rem;
+  z-index: 1032;
+  border-radius: 40px;
+}
+
+.map-menu-settings {
+  bottom: 7.25rem;
   position: fixed;
   right: 1.25rem;
   z-index: 1032;
@@ -13,5 +21,15 @@
 
 #sel_map_provincia {
   height: 38px!important;
+}
+
+#divCross {
+  z-index: 2000;
+  color: red;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+/*  margin-top: -13px;
+  margin-left: -10x;*/
 }
 

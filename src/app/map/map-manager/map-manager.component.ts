@@ -62,6 +62,8 @@ export class MapManagerComponent implements OnInit {
   private ctlScale!: any;
   private ctlMeasure!: any;
 
+  public sideBar: string = 'info';
+
   //  ********* Layer Initialization ****************
   private lyrStreet = 'https://api.mapbox.com/styles/v1/tiburon07/ckjwqwp000hcv17q7s817olxj/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoidGlidXJvbjA3IiwiYSI6ImNramZ2em85NzNwZDQycG52M3NqbTZsbzQifQ.PyUsvBL-12oKzBldB2CPuA';
   private lyrSatellite = 'https://api.mapbox.com/styles/v1/tiburon07/ckjwqunda0eyr17o1u589jqro/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoidGlidXJvbjA3IiwiYSI6ImNramZ2em85NzNwZDQycG52M3NqbTZsbzQifQ.PyUsvBL-12oKzBldB2CPuA';
@@ -73,6 +75,8 @@ export class MapManagerComponent implements OnInit {
   //  ********* Geolocalizzazione ****************
   private markerLoc!: L.Marker
   private circleLoc!: L.Circle
+  private posCurrent!: any;
+  private posLastTime!: any;
 
   private listaProvice!: MunicipoFeature[];
   private listaComuniByProvinciaSel!: MunicipoFeature[];
@@ -100,11 +104,13 @@ export class MapManagerComponent implements OnInit {
     this.map.addLayer(this.objBaseMaps.Street);
 
     //GeoLocation
-    this.markerLoc = L.marker([41.902782, 12.496366], { icon: L.icon({ iconSize: [25, 41], iconAnchor: [13, 41], popupAnchor: [0, -28], iconUrl: '/assets/img/markers/marker-icon.png', shadowUrl: '/assets/img/markers/marker-shadow.png' }) }).addTo(this.map)
-    this.circleLoc = L.circle([41.902782, 12.496366], 10).addTo(this.map)
+    this.markerLoc = L.marker([41.902782, 12.496366], {
+      icon: L.icon({ iconSize: [25, 41], iconAnchor: [13, 41], popupAnchor: [0, -28], iconUrl: '/assets/img/markers/marker-icon.png', shadowUrl: '/assets/img/markers/marker-shadow.png' })
+    })
+    this.circleLoc = L.circle([41.902782, 12.496366], 10)
 
     //Event GeoLocation
-    setInterval(() => {this.map.locate();}, 3000)//{ setView: true, maxZoom: 11 });}, 1000) //Geolocation
+    setInterval(() => {this.map.locate();}, 2500)//{ setView: true, maxZoom: 11 });}, 1000) //Geolocation
     this.map.on('locationfound', this.onLocationFound.bind(this));
     this.map.on('locationerror', this.onLocationError.bind(this));
       
@@ -113,10 +119,12 @@ export class MapManagerComponent implements OnInit {
     this.clasterMunicipiMap();
   }
 
-  onLocationFound(e:any): void {
-    this.markerLoc.setLatLng(e.latlng);
-    this.circleLoc.setLatLng(e.latlng)
-    this.circleLoc.setRadius(e.accuracy);
+  onLocationFound(e: any): void {
+    this.markerLoc.setLatLng(e.latlng).remove().addTo(this.map);
+    this.circleLoc.setLatLng(e.latlng).remove().addTo(this.map);
+    this.circleLoc.setRadius(e.accuracy / 2);
+    this.posCurrent = e.latlng;
+    this.posLastTime! = new Date();
   }
 
   onLocationError(e: { message: any; }) {
@@ -177,6 +185,15 @@ export class MapManagerComponent implements OnInit {
     var opts_list = sel.find('option');
     (<any>opts_list).sort((a: any, b: any) => { return $(a).text() > $(b).text() ? 1 : -1; });
     sel.empty().append(opts_list).val('');
+  }
+
+  randomizePos(e:any) {
+    let offsetX = Math.random() * 0.00500 - 0.0025;
+    let offsetY = Math.random() * 0.00500 - 0.0025;
+    e.latitude = e.latitude + offsetX;
+    e.longitude = e.longitude + offsetY;
+    e.latlng = L.latLng([e.latitude, e.longitude]);
+    return e;
   }
 }
 
