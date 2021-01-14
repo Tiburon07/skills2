@@ -58,7 +58,9 @@ export class MapManagerComponent implements OnInit {
 
   //  ********* Map Initialization ****************
   private map!: L.Map;
+  private ctlLayers!: any;
   private ctlScale!: any;
+  private ctlMeasure!: any;
 
   //  ********* Layer Initialization ****************
   private lyrStreet = 'https://api.mapbox.com/styles/v1/tiburon07/ckjwqwp000hcv17q7s817olxj/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoidGlidXJvbjA3IiwiYSI6ImNramZ2em85NzNwZDQycG52M3NqbTZsbzQifQ.PyUsvBL-12oKzBldB2CPuA';
@@ -82,7 +84,9 @@ export class MapManagerComponent implements OnInit {
   constructor(private spinner: NgxSpinnerService, private toaster: ToastrService, private service: MapManagerService) {
 
     this.objBaseMaps = { "Street": L.tileLayer(this.lyrStreet, this.streetMapOptions), "Satellite": L.tileLayer(this.lyrSatellite, this.satelliteMapOptions)}
-    this.ctlScale = L.control.layers(this.objBaseMaps, this.objOverlays);
+    this.ctlLayers = L.control.layers(this.objBaseMaps, this.objOverlays);
+    //this.ctlMeasure = L.control.polylineMeasure({ position: 'topright' });
+    this.ctlScale = L.control.scale({ position: 'bottomleft', metric: true, maxWidth: 200, imperial: false });
 
   }
 
@@ -91,6 +95,7 @@ export class MapManagerComponent implements OnInit {
     //Inizializzo mappa
     this.map = L.map('mapid').setView([41.902782, 12.496366], 11);
     this.map.removeControl(this.map.zoomControl);
+    this.map.addControl(this.ctlLayers);
     this.map.addControl(this.ctlScale);
     this.map.addLayer(this.objBaseMaps.Street);
 
