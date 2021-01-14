@@ -31,12 +31,8 @@
   margin-left: -0.76rem;
 }
 
-#geoLocSecondsRange{
-    width: 9.5rem!important;
+#geoLocSecondsRange, #inpTrackingRange {
+  width: 9.5rem !important;
 }
 
-#inpTrackingRange {
-  background: 'green';
-  background-size: 480px;
-}
 
