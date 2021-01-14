@@ -86,6 +86,7 @@ export class MapManagerComponent implements OnInit {
   private circleLoc!: L.Circle
   public posCurrent: PosCurrent = { lat: 0, lng: 0 };
   public posLastTime!: any;
+  public interval: number = 3;
 
   private listaProvice!: MunicipoFeature[];
   private listaComuniByProvinciaSel!: MunicipoFeature[];
@@ -198,9 +199,16 @@ export class MapManagerComponent implements OnInit {
     return e;
   }
 
+
+  sliderSecondsChange(e: any) {
+    this.interval = e.target.value;
+    clearInterval(this.autolocate);
+    this.autolocate = setInterval(() => { this.map.locate(); }, this.interval * 1000)
+  }
+
   onChangeGeoloc(e: any) {
     if (e.target.checked) {
-      this.autolocate = setInterval(() => { this.map.locate(); }, 2500)
+      this.autolocate = setInterval(() => { this.map.locate();}, this.interval*1000)
     } else {
       clearInterval(this.autolocate);
       this.map.stopLocate()

@@ -10,13 +10,13 @@
     <div class="form-group">
       <div class="custom-control custom-switch">
         <input (change)="onChangeGeoloc($event)" type="checkbox" class="custom-control-input" id="switchLoc">
-        <label class="custom-control-label" for="switchLoc">Geolocalizzazione</label>
+        <label class="custom-control-label" for="switchLoc">Geolocalizzazione ({{interval}}s)</label>
       </div>
     </div>
     <div id="sldrAutolocate" class="row">
       <div class="col-1">3s</div>
       <div class="col-8">
-        <input type="range" class="form-range mt-1" min="3" max="30" step="3" id="geoLocSecondsRange">
+        <input (change)="sliderSecondsChange($event)" value="3" type="range" class="form-range mt-1" min="3" max="30" step="3" id="geoLocSecondsRange">
       </div>
       <div class="col-1"><p>30s</p></div>
     </div>
