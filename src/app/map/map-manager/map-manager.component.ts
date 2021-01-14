@@ -167,12 +167,11 @@ export class MapManagerComponent implements OnInit {
     var markers = L.markerClusterGroup();
     for (let i = 0; i < e.comuni.length - 2; i++)
       markers.addLayer(L.marker([e.comuni[i]['lat'], e.comuni[i]['lng']], { icon: L.icon({ iconSize: [40, 45], iconAnchor: [13, 41], popupAnchor: [0, -28], iconUrl: '/assets/img/markers/location-pin.png', shadowUrl: '/assets/img/markers/marker-shadow.png' }) }));
-/*    this.map.addLayer(markers);*/
     this.centroComune.addLayer(markers);
   }
 
   displayMunicipio(municipio: any) {
-    this.confiniComune.addLayer(L.geoJSON(municipio, { style: { fillOpacity: 0, weight: 0.3 }}))
+    this.confiniComune.addLayer(L.geoJSON(municipio, { style: { fillOpacity: 0, weight: 0.5, color: 'red' }}))
   }
 
   opacityMunicipi(municipi: any) {
@@ -198,7 +197,6 @@ export class MapManagerComponent implements OnInit {
     e.latlng = L.latLng([e.latitude, e.longitude]);
     return e;
   }
-
 
   sliderSecondsChange(e: any) {
     this.interval = e.target.value;
