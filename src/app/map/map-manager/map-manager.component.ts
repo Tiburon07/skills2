@@ -110,12 +110,14 @@ export class MapManagerComponent implements OnInit {
 
     //GeoLocation
     this.markerLoc = L.marker([41.902782, 12.496366], {
-      icon: L.icon({ iconSize: [25, 41], iconAnchor: [13, 41], popupAnchor: [0, -28], iconUrl: '/assets/img/markers/marker-icon.png', shadowUrl: '/assets/img/markers/marker-shadow.png' })
+      icon: L.divIcon({ iconSize: [24, 12], iconAnchor: [12, 12], html: '<i class="fa fa-crosshairs fa-2x text-danger"></i>', className: 'divCross' })
+      //L.icon({ iconSize: [25, 41], iconAnchor: [13, 41], popupAnchor: [0, -28], iconUrl: '/assets/img/markers/marker-icon.png', shadowUrl: '/assets/img/markers/marker-shadow.png' })
     })
     this.circleLoc = L.circle([41.902782, 12.496366], 10)
 
     //Event GeoLocation
-    setInterval(() => {this.map.locate();}, 2500)//{ setView: true, maxZoom: 11 });}, 1000) //Geolocation
+    //setInterval(() => {this.map.locate();}, 2500)//{ setView: true, maxZoom: 11 });}, 1000) //Geolocation
+    this.map.locate()
     this.map.on('locationfound', this.onLocationFound.bind(this));
     this.map.on('locationerror', this.onLocationError.bind(this));
       
