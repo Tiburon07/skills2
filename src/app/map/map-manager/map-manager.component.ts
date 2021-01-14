@@ -56,40 +56,53 @@ interface Provincia {
 })
 export class MapManagerComponent implements OnInit {
 
+  //  ********* Map Initialization ****************
   private map!: L.Map;
+  private ctlScale!: any;
+
+  //  ********* Layer Initialization ****************
+  private lyrStreet = 'https://api.mapbox.com/styles/v1/tiburon07/ckjwqwp000hcv17q7s817olxj/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoidGlidXJvbjA3IiwiYSI6ImNramZ2em85NzNwZDQycG52M3NqbTZsbzQifQ.PyUsvBL-12oKzBldB2CPuA';
+  private lyrSatellite = 'https://api.mapbox.com/styles/v1/tiburon07/ckjwqunda0eyr17o1u589jqro/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoidGlidXJvbjA3IiwiYSI6ImNramZ2em85NzNwZDQycG52M3NqbTZsbzQifQ.PyUsvBL-12oKzBldB2CPuA';
+
+  //  ********* Setup Layer COntrol****************
+  private objBaseMaps!: any; 
+  private objOverlays!: any;
+
+  //  ********* Geolocalizzazione ****************
   private markerLoc!: L.Marker
   private circleLoc!: L.Circle
 
-/*  private listaProvice!: MunicipoFeature[];
-  private listaComuniByProvinciaSel!: MunicipoFeature[];*/
+  private listaProvice!: MunicipoFeature[];
+  private listaComuniByProvinciaSel!: MunicipoFeature[];
 
-  private tileLayer = 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoidGlidXJvbjA3IiwiYSI6ImNramZ2em85NzNwZDQycG52M3NqbTZsbzQifQ.PyUsvBL-12oKzBldB2CPuA';
 
-  private mapOptions = {
-    attribution: '',
-    maxZoom: 18,
-    id: 'mapbox/streets-v11',
-    tileSize: 512,
-    zoomOffset: -1,
-    accessToken: 'your.mapbox.access.token',
+  private streetMapOptions = { attribution: '', maxZoom: 18, id: 'street', tileSize: 512, zoomOffset: -1, accessToken: 'no-token' }
+  private satelliteMapOptions = { attribution: '', maxZoom: 18, id: 'satellite', tileSize: 512, zoomOffset: -1, accessToken: 'no-token' }
+
+  constructor(private spinner: NgxSpinnerService, private toaster: ToastrService, private service: MapManagerService) {
+
+    this.objBaseMaps = { "Street": L.tileLayer(this.lyrStreet, this.streetMapOptions), "Satellite": L.tileLayer(this.lyrSatellite, this.satelliteMapOptions)}
+    this.ctlScale = L.control.layers(this.objBaseMaps, this.objOverlays);
+
   }
-
-  constructor(private spinner: NgxSpinnerService, private toaster: ToastrService, private service: MapManagerService) { }
 
   ngOnInit(): void {
 
+    //Inizializzo mappa
     this.map = L.map('mapid').setView([41.902782, 12.496366], 11);
-    L.tileLayer(this.tileLayer, this.mapOptions).addTo(this.map);
-    this.map.removeControl(this.map.zoomControl)
+    this.map.removeControl(this.map.zoomControl);
+    this.map.addControl(this.ctlScale);
+    this.map.addLayer(this.objBaseMaps.Street);
 
     //GeoLocation
     this.markerLoc = L.marker([41.902782, 12.496366], { icon: L.icon({ iconSize: [25, 41], iconAnchor: [13, 41], popupAnchor: [0, -28], iconUrl: '/assets/img/markers/marker-icon.png', shadowUrl: '/assets/img/markers/marker-shadow.png' }) }).addTo(this.map)
     this.circleLoc = L.circle([41.902782, 12.496366], 10).addTo(this.map)
-    //EVENT GeoLocation
+
+    //Event GeoLocation
     setInterval(() => {this.map.locate();}, 3000)//{ setView: true, maxZoom: 11 });}, 1000) //Geolocation
     this.map.on('locationfound', this.onLocationFound.bind(this));
     this.map.on('locationerror', this.onLocationError.bind(this));
-
+      
     //Layers
     this.municipiMap();
     this.clasterMunicipiMap();
@@ -136,13 +149,14 @@ export class MapManagerComponent implements OnInit {
   displayMunicipio(municipio: any) {
     L.geoJSON(municipio, { style: { fillOpacity: 0, weight: 0.3 } })
       .addTo(this.map)
-      .on('click', function (e) {
+/*      .on('click', function (e) {
         if (e.sourceTarget.options.fillOpacity == 0) {
           e.target.setStyle({ fillOpacity: 0.3 })
         } else {
           e.target.setStyle({ fillOpacity: 0 })
         }
-      });//this.opacityMunicipi.bind(this))
+      }
+      );//this.opacityMunicipi.bind(this))*/
   }
 
   opacityMunicipi(municipi: any) {
