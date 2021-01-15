@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import * as $ from 'jquery';
-import { NgxSpinnerService } from "ngx-spinner";
+import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 
-//Leaflet
+// Leaflet
 import * as L from 'leaflet';
-import 'leaflet.heat'
-import 'leaflet.markercluster'
+import 'leaflet.heat';
+import 'leaflet.markercluster';
 
 
-//RXJS
+// RXJS
 import { from, fromEvent, of } from 'rxjs';
 import { tap, map, switchMap, debounceTime, filter, catchError, distinct, } from 'rxjs/operators';
 import { MapManagerService } from './map-manager-service';
@@ -41,12 +41,12 @@ interface MunicipoFeature {
 interface MunicipiFeatureCollection {
   type: string;
   features: [];
-  crs: {}
+  crs: {};
 }
 
 interface Provincia {
   codice: string;
-  nome: string
+  nome: string;
 }
 
 interface PosCurrent {
@@ -68,7 +68,7 @@ export class MapManagerComponent implements OnInit {
   private ctlScale!: any;
   private ctlMeasure!: any;
 
-  public sideBar: string = 'info';
+  public sideBar = 'info';
 
   //  ********* Layer Initialization ****************
   private lyrStreet = 'https://api.mapbox.com/styles/v1/tiburon07/ckjwqwp000hcv17q7s817olxj/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoidGlidXJvbjA3IiwiYSI6ImNramZ2em85NzNwZDQycG52M3NqbTZsbzQifQ.PyUsvBL-12oKzBldB2CPuA';
@@ -76,7 +76,7 @@ export class MapManagerComponent implements OnInit {
 
 
   //  ********* Setup Layer COntrol****************
-  private objBaseMaps!: any; 
+  private objBaseMaps!: any;
   private objOverlays!: any;
   private confiniComune!: any;
   private centroComune!: any;
@@ -85,32 +85,29 @@ export class MapManagerComponent implements OnInit {
   //  ********* Geolocalizzazione ****************
   private autolocate: any;
   private tracking: any;
-  private markerLoc!: L.Marker
-  private circleLoc!: L.Circle
+  private markerLoc!: L.Marker;
+  private circleLoc!: L.Circle;
   public posCurrent: PosCurrent = { lat: 0, lng: 0, accuracy: 0};
   public posLastTime!: any;
-  public intervalGeoLoc: number = 3;
-  public intervalTrack: number = 6;
+  public intervalGeoLoc = 3;
+  public intervalTrack = 6;
 
-  private listaProvice!: MunicipoFeature[];
-  private listaComuniByProvinciaSel!: MunicipoFeature[];
-
-  private streetMapOptions = { attribution: '', maxZoom: 18, id: 'street', tileSize: 512, zoomOffset: -1, accessToken: 'no-token' }
-  private satelliteMapOptions = { attribution: '', maxZoom: 18, id: 'satellite', tileSize: 512, zoomOffset: -1, accessToken: 'no-token' }
+  private streetMapOptions = { attribution: '', maxZoom: 18, id: 'street', tileSize: 512, zoomOffset: -1, accessToken: 'no-token' };
+  private satelliteMapOptions = { attribution: '', maxZoom: 18, id: 'satellite', tileSize: 512, zoomOffset: -1, accessToken: 'no-token' };
 
   constructor(private spinner: NgxSpinnerService, private toaster: ToastrService, private service: MapManagerService) {
     this.confiniComune = L.layerGroup();
     this.centroComune = L.layerGroup();
     this.lyrBreadcrumbs = L.layerGroup();
-    this.objOverlays = { 'Confini Comune': this.confiniComune, 'Centro Comune': this.centroComune, 'Monitoraggio': this.lyrBreadcrumbs};
-    this.objBaseMaps = { "Street": L.tileLayer(this.lyrStreet, this.streetMapOptions), "Satellite": L.tileLayer(this.lyrSatellite, this.satelliteMapOptions)}
+    this.objOverlays = { 'Confini Comune': this.confiniComune, 'Centro Comune': this.centroComune, Monitoraggio: this.lyrBreadcrumbs};
+    this.objBaseMaps = { Street: L.tileLayer(this.lyrStreet, this.streetMapOptions), Satellite: L.tileLayer(this.lyrSatellite, this.satelliteMapOptions)};
     this.ctlLayers = L.control.layers(this.objBaseMaps, this.objOverlays);
     this.ctlScale = L.control.scale({ position: 'bottomleft', metric: true, maxWidth: 200, imperial: false });
   }
 
   ngOnInit(): void {
 
-    //Inizializzo mappa
+    // Inizializzo mappa
     this.map = L.map('mapid').setView([41.902782, 12.496366], 11);
     this.map.removeControl(this.map.zoomControl);
     this.map.addControl(this.ctlLayers);
@@ -118,20 +115,15 @@ export class MapManagerComponent implements OnInit {
     this.map.addLayer(this.objBaseMaps.Street);
     this.map.addLayer(this.lyrBreadcrumbs);
 
-    //GeoLocation
-    this.markerLoc = L.marker([41.902782, 12.496366], {
-      icon: L.divIcon({ iconSize: [24, 12], iconAnchor: [12, 12], html: '<i class="fa fa-crosshairs fa-2x text-danger"></i>', className: 'divCross' })
-      //L.icon({ iconSize: [25, 41], iconAnchor: [13, 41], popupAnchor: [0, -28], iconUrl: '/assets/img/markers/marker-icon.png', shadowUrl: '/assets/img/markers/marker-shadow.png' })
-    })
-    this.circleLoc = L.circle([41.902782, 12.496366], 10)
+    // GeoLocation
+    this.markerLoc = L.marker([41.902782, 12.496366], { icon: L.divIcon({ iconSize: [24, 12], iconAnchor: [12, 12], html: '<i class="fa fa-crosshairs fa-2x text-danger"></i>', className: 'divCross' })});
+    this.circleLoc = L.circle([41.902782, 12.496366], 10);
 
-    //Event GeoLocation
-    //{ setView: true, maxZoom: 11 });}, 1000) //Geolocation
-    //this.map.locate()
+    // Event GeoLocation
     this.map.on('locationfound', this.onLocationFound.bind(this));
     this.map.on('locationerror', this.onLocationError.bind(this));
-      
-    //Layers
+
+    // Layers
     this.municipiMap();
     this.clasterMunicipiMap();
   }
@@ -149,61 +141,37 @@ export class MapManagerComponent implements OnInit {
   }
 
   municipiMap() {
-    const p = this.service.getMunicipi()
-    //Carico le features
+    const p = this.service.getMunicipi();
+    // Carico le features
     from(p).pipe(
       switchMap((data: MunicipiFeatureCollection) => from(data.features) || []),
     ).subscribe((municipioFeature: MunicipoFeature) => {
       this.displayMunicipio(municipioFeature);
     });
 
-    //Imposto la lista delle province filtrando tra i municipi
+    // Imposto la lista delle province filtrando tra i municipi
     from(p).pipe(
       switchMap((data: MunicipiFeatureCollection) => from(data.features) || []),
       distinct((municipioFeature: MunicipoFeature) => municipioFeature.properties.prov_acr)
-    ).subscribe(municipio => {$('#map_province').append(new Option(municipio.properties.prov_name, municipio.properties.prov_acr))});
+    ).subscribe(municipio => {$('#map_province').append(new Option(municipio.properties.prov_name, municipio.properties.prov_acr)); });
   }
 
   clasterMunicipiMap() {
-    const p = this.service.getCoordMunicipi()
-    from(p).subscribe(municipi => { this.displayClaster(municipi) });
+    const p = this.service.getCoordMunicipi();
+    from(p).subscribe(municipi => { this.displayClaster(municipi); });
   }
 
   displayClaster(e: any) {
-    var markers = L.markerClusterGroup();
-    for (let i = 0; i < e.comuni.length - 2; i++)
-      markers.addLayer(L.marker([e.comuni[i]['lat'], e.comuni[i]['lng']], { icon: L.icon({ iconSize: [40, 45], iconAnchor: [13, 41], popupAnchor: [0, -28], iconUrl: '/assets/img/markers/location-pin.png', shadowUrl: '/assets/img/markers/marker-shadow.png' }) }));
+    const markers = L.markerClusterGroup();
+    for (let i = 0; i < e.comuni.length - 2; i++) {
+      markers.addLayer(L.marker([e.comuni[i].lat, e.comuni[i].lng], { icon: L.icon({ iconSize: [40, 45], iconAnchor: [13, 41], popupAnchor: [0, -28], iconUrl: '/assets/img/markers/location-pin.png', shadowUrl: '/assets/img/markers/marker-shadow.png' }) }));
+    }
     this.centroComune.addLayer(markers);
   }
 
   displayMunicipio(municipio: any) {
-    this.confiniComune.addLayer(L.geoJSON(municipio, { style: { fillOpacity: 0, weight: 0.5, color: 'red' }}))
+    this.confiniComune.addLayer(L.geoJSON(municipio, { style: { fillOpacity: 0, weight: 0.5, color: 'red' }}));
   }
-
-  opacityMunicipi(municipi: any) {
-    (municipi.sourceTarget.options.fillOpacity == 0) ? municipi.target.setStyle({ fillOpacity: 0.3 }) : municipi.target.setStyle({ fillOpacity: 0 });
-  }
-
-  onClickMapMenu(e: any) {
-    this.sortSelect('map_province');
-  }
-
-  sortSelect(id:any) {
-    var sel = $(`#${id}`);
-    var opts_list = sel.find('option');
-    (<any>opts_list).sort((a: any, b: any) => { return $(a).text() > $(b).text() ? 1 : -1; });
-    sel.empty().append(opts_list).val('');
-  }
-
-  randomizePos(e:any) {
-    let offsetX = Math.random() * 0.00500 - 0.0025;
-    let offsetY = Math.random() * 0.00500 - 0.0025;
-    e.latitude = e.latitude + offsetX;
-    e.longitude = e.longitude + offsetY;
-    e.latlng = L.latLng([e.latitude, e.longitude]);
-    return e;
-  }
-
 
   onChangeGeoloc(e: any) {
     if (e.target.checked) {
@@ -212,10 +180,10 @@ export class MapManagerComponent implements OnInit {
         this.startTracking();
       }
     } else {
-      this.map.stopLocate()
+      this.map.stopLocate();
       clearInterval(this.autolocate);
-      this.markerLoc.remove()
-      this.circleLoc.remove()
+      this.markerLoc.remove();
+      this.circleLoc.remove();
       this.posCurrent = { lat: 0, lng: 0, accuracy: 0};
       this.posLastTime = null;
     }
@@ -225,56 +193,66 @@ export class MapManagerComponent implements OnInit {
     this.intervalGeoLoc = e.target.value;
     if ($('#switchLoc').prop('checked')) {
       clearInterval(this.autolocate);
-      this.autolocate = setInterval(() => { this.map.locate(); }, this.intervalGeoLoc * 1000)
+      this.autolocate = setInterval(() => { this.map.locate(); }, this.intervalGeoLoc * 1000);
     }
   }
 
   onChangeTracking(e: any){
-    if (e.target.checked && $('#switchLoc').prop('checked')) {
-      this.tracking = setInterval(() => {
-        let radius = Math.min(200, this.posCurrent.accuracy / 2)
-        radius = Math.max(10, radius)
-        let mrkBreadcrumb = L.circle([this.posCurrent.lat, this.posCurrent.lng], { radius: radius, color: 'green' }).addTo(this.map);
-        this.lyrBreadcrumbs.addLayer(mrkBreadcrumb);
-      }, this.intervalTrack * 1000)
-    } else {
-      clearInterval(this.tracking);
-    }
+    if (e.target.checked && $('#switchLoc').prop('checked')) { this.startTracking(); }
+    else { clearInterval(this.tracking); }
   }
 
   sliderTrackSecondsChange(e: any) {
     this.intervalTrack = e.target.value;
     if ($('#switchLoc').prop('checked')) {
       clearInterval(this.tracking);
-      this.tracking = setInterval(() => {
-        var radius = Math.min(200, this.posCurrent.accuracy / 2)
-        radius = Math.max(10, radius)
-        var mrkBreadcrumb = L.circle([this.posCurrent.lat, this.posCurrent.lng], { radius: radius, color: 'green' }).addTo(this.map);
-        this.lyrBreadcrumbs.addLayer(mrkBreadcrumb);
-      }, this.intervalTrack * 1000)
+      this.startTracking();
     }
   }
 
   startTracking() {
     this.tracking = setInterval(() => {
-      let radius = Math.min(200, this.posCurrent.accuracy / 2)
-      radius = Math.max(10, radius)
-      let mrkBreadcrumb = L.circle([this.posCurrent.lat, this.posCurrent.lng], { radius: radius, color: 'green' }).addTo(this.map);
+      let radius = Math.min(200, this.posCurrent.accuracy / 2);
+      radius = Math.max(10, radius);
+      const mrkBreadcrumb = L.circle([this.posCurrent.lat, this.posCurrent.lng], { radius, color: 'green' }).addTo(this.map);
       this.lyrBreadcrumbs.addLayer(mrkBreadcrumb);
-    }, this.intervalTrack * 1000)
+    }, this.intervalTrack * 1000);
   }
 
-  onClickMapMenuInfo(e:any) {
-    if ($('.collapseInfo').hasClass("in")) {
-      $('.collapseInfo').removeClass('in');
-    } else {
-      $('.collapseInfo').addClass("in");
-    }
+  randomizePos(e: any) {
+    const offsetX = Math.random() * 0.00500 - 0.0025;
+    const offsetY = Math.random() * 0.00500 - 0.0025;
+    e.latitude = e.latitude + offsetX;
+    e.longitude = e.longitude + offsetY;
+    e.latlng = L.latLng([e.latitude, e.longitude]);
+    return e;
   }
+
+  onClickMapMenuInfo(e: any) {
+    if ($('.collapseInfo').hasClass('in')) { $('.collapseInfo').removeClass('in'); }
+    else { $('.collapseInfo').addClass('in'); }
+  }
+
+
+  // *******************UTILITI********************
+  sortSelect(id: any) {
+    const sel = $(`#${id}`);
+    // tslint:disable-next-line:variable-name
+    const opts_list = sel.find('option');
+    (opts_list as any).sort((a: any, b: any) => $(a).text() > $(b).text() ? 1 : -1);
+    sel.empty().append(opts_list).val('');
+  }
+
+  opacityMunicipi(municipi: any) {
+    (municipi.sourceTarget.options.fillOpacity == 0) ? municipi.target.setStyle({ fillOpacity: 0.3 }) : municipi.target.setStyle({ fillOpacity: 0 });
+  }
+
+
+  onClickMapMenu(e: any) { this.sortSelect('map_province'); }
 }
 
 
-//Click Mappa
+// Click Mappa
 /*onMapClick(e: any) {
   console.log(e);
   L.popup()
@@ -283,14 +261,14 @@ export class MapManagerComponent implements OnInit {
     .openOn(this.map);
 }*/
 
-//Ciclare le heature del geojson
+// Ciclare le heature del geojson
 /*L.geoJSON(municipio, {
   style: { fillOpacity: 0, weight: 0.3 }, //onEachFeature: this.onEachFeature
 })
   .addTo(this.map)
   .on('click', this.opacityMunicipi.bind(this))*/
 
-//Pop up click geojson
+// Pop up click geojson
 /*onEachFeature(feature: any, layer: any) {
   if (feature.properties && feature.properties.name) {
     let bodyPopUp = `<strong>Regione: </strong>${feature.properties.reg_name} </br>
@@ -300,7 +278,7 @@ export class MapManagerComponent implements OnInit {
   }
 }*/
 
-//heatLayer
+// heatLayer
 /*L.heatLayer(
   [[e.latlng.lat, e.latlng.lng, (radius / 20)]],
   {
