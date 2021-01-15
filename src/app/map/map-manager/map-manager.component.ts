@@ -263,6 +263,14 @@ export class MapManagerComponent implements OnInit {
       this.lyrBreadcrumbs.addLayer(mrkBreadcrumb);
     }, this.intervalTrack * 1000)
   }
+
+  onClickMapMenuInfo(e:any) {
+    if ($('.collapseInfo').hasClass("in")) {
+      $('.collapseInfo').removeClass('in');
+    } else {
+      $('.collapseInfo').addClass("in");
+    }
+  }
 }
 
 
