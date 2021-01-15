@@ -137,10 +137,10 @@ export class MapManagerComponent implements OnInit {
   }
 
   onLocationFound(e: any): void {
+    e = this.randomizePos(e);
     this.markerLoc.setLatLng(e.latlng).remove().addTo(this.map);
     this.circleLoc.setLatLng(e.latlng).remove().addTo(this.map);
     this.circleLoc.setRadius(e.accuracy);
-    console.log(e);
     this.posCurrent = { lat: e.latlng.lat, lng: e.latlng.lng, accuracy: e.accuracy};
     this.posLastTime = new Date();
   }
@@ -237,13 +237,17 @@ export class MapManagerComponent implements OnInit {
 
   // *******************UTILITI********************
   randomizePos(e: any) {
-    const offsetX = Math.random() * 0.00500 - 0.0025;
-    const offsetY = Math.random() * 0.00500 - 0.0025;
+    const offsetX = Math.random() * 0.000100 - 0.00025;
+    const offsetY = Math.random() * 0.000100 - 0.00025;
     e.latitude = e.latitude + offsetX;
     e.longitude = e.longitude + offsetY;
     e.latlng = L.latLng([e.latitude, e.longitude]);
     return e;
   }
+
+  // randomizePos(e: any) {
+  //   return e;
+  // }
 
   sortSelect(id: any) {
     const sel = $(`#${id}`);
