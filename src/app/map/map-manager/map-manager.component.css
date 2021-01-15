@@ -50,7 +50,7 @@
   width: 100%;
   position: absolute;
   z-index: 401;
-  opacity: 0.7;
+  opacity: 0.8;
   transition: height 1s ease, box-shadow 1s ease;
   height: 0rem !important;
   overflow: hidden;

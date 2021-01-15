@@ -1,7 +1,15 @@
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
   <div id="mapid">
-    <div class="collapseInfo container-fluid"></div>
+    <div class="collapseInfo container-fluid">
+      <div class="row">
+        <div class="col-12">
+          <h5 class="text-light">Latitudine: {{posCurrent.lat}}</h5>
+          <h5 class="text-light">Longitudine: {{posCurrent.lng}}</h5>
+          <h5 class="text-light">Timer: {{posLastTime | date:'HH:mm:ss'}}</h5>
+        </div>
+      </div>
+    </div>
   </div>
   <button (click)="onClickMapMenuInfo($event)" class="btn btn-info map-menu-info" role="button" aria-label="Map menu"><i class="fas fa-info-circle"></i></button>
   <button (click)="onClickMapMenu($event)" data-widget="control-sidebar" data-slide="true" class="btn btn-secondary map-menu" role="button" aria-label="Map menu"><i class="fas fa-cog"></i></button>
