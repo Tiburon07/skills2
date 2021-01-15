@@ -53,6 +53,7 @@ interface PosCurrent {
   lat: number;
   lng: number;
   accuracy: number;
+  timer: Date;
 }
 
 @Component({
@@ -88,8 +89,7 @@ export class MapManagerComponent implements OnInit {
   private tracking: any;
   private markerLoc!: L.Marker;
   private circleLoc!: L.Circle;
-  public posCurrent: PosCurrent = { lat: 0, lng: 0, accuracy: 0};
-  public posLastTime!: any;
+  public posCurrent: PosCurrent = { lat: 0, lng: 0, accuracy: 0, timer: new Date()};
   public intervalGeoLoc = 3;
   public intervalTrack = 6;
 
@@ -141,8 +141,9 @@ export class MapManagerComponent implements OnInit {
     this.markerLoc.setLatLng(e.latlng).remove().addTo(this.map);
     this.circleLoc.setLatLng(e.latlng).remove().addTo(this.map);
     this.circleLoc.setRadius(e.accuracy);
-    this.posCurrent = { lat: e.latlng.lat, lng: e.latlng.lng, accuracy: e.accuracy};
-    this.posLastTime = new Date();
+    let date = new Date(e.timestamp)
+    console.log(date)
+    this.posCurrent = { lat: e.latlng.lat, lng: e.latlng.lng, accuracy: e.accuracy, timer: date};
   }
 
   onLocationError(e: { message: any; }) {
@@ -193,10 +194,10 @@ export class MapManagerComponent implements OnInit {
       clearInterval(this.autolocate);
       this.markerLoc.remove();
       this.circleLoc.remove();
-      this.posCurrent = { lat: 0, lng: 0, accuracy: 0};
-      this.posLastTime = null;
+      this.posCurrent = { lat: 0, lng: 0, accuracy: 0, timer: new Date()};
     }
   }
+
 
   sliderSecondsChange(e: any) {
     this.intervalGeoLoc = e.target.value;
@@ -260,7 +261,7 @@ export class MapManagerComponent implements OnInit {
     (municipi.sourceTarget.options.fillOpacity == 0) ? municipi.target.setStyle({ fillOpacity: 0.3 }) : municipi.target.setStyle({ fillOpacity: 0 });
   }
 
-  onClickMapMenu(e: any) { this.sortSelect('map_province'); }
+  onClickMapMenu(e: any) { this.sortSelect('map_province');}
 }
 
 
