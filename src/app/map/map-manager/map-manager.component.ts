@@ -73,7 +73,8 @@ export class MapManagerComponent implements OnInit {
   //  ********* Layer Initialization ****************
   private lyrStreet = 'https://api.mapbox.com/styles/v1/tiburon07/ckjwqwp000hcv17q7s817olxj/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoidGlidXJvbjA3IiwiYSI6ImNramZ2em85NzNwZDQycG52M3NqbTZsbzQifQ.PyUsvBL-12oKzBldB2CPuA';
   private lyrSatellite = 'https://api.mapbox.com/styles/v1/tiburon07/ckjwqunda0eyr17o1u589jqro/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoidGlidXJvbjA3IiwiYSI6ImNramZ2em85NzNwZDQycG52M3NqbTZsbzQifQ.PyUsvBL-12oKzBldB2CPuA';
-
+  private lyrNavigation = 'https://api.mapbox.com/styles/v1/tiburon07/ckjyan9y22jia17pubjlon48a/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoidGlidXJvbjA3IiwiYSI6ImNramZ2em85NzNwZDQycG52M3NqbTZsbzQifQ.PyUsvBL-12oKzBldB2CPuA';
+  private lyrOutdoor = 'https://api.mapbox.com/styles/v1/tiburon07/ckjyaksnf1sk617mvwko9oih3/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoidGlidXJvbjA3IiwiYSI6ImNramZ2em85NzNwZDQycG52M3NqbTZsbzQifQ.PyUsvBL-12oKzBldB2CPuA';
 
   //  ********* Setup Layer COntrol****************
   private objBaseMaps!: any;
@@ -94,13 +95,20 @@ export class MapManagerComponent implements OnInit {
 
   private streetMapOptions = { attribution: '', maxZoom: 18, id: 'street', tileSize: 512, zoomOffset: -1, accessToken: 'no-token' };
   private satelliteMapOptions = { attribution: '', maxZoom: 18, id: 'satellite', tileSize: 512, zoomOffset: -1, accessToken: 'no-token' };
+  private navigationMapOptions = { attribution: '', maxZoom: 18, minNativeZoom: 1, id: 'navigazione', tileSize: 512, zoomOffset: -1, accessToken: 'no-token' };
+  private outdoorsMapOptions = { attribution: '', maxZoom: 18, minNativeZoom: 1, id: 'outdoor', tileSize: 512, zoomOffset: -1, accessToken: 'no-token' };
 
   constructor(private spinner: NgxSpinnerService, private toaster: ToastrService, private service: MapManagerService) {
     this.confiniComune = L.layerGroup();
     this.centroComune = L.layerGroup();
     this.lyrBreadcrumbs = L.layerGroup();
     this.objOverlays = { 'Confini Comune': this.confiniComune, 'Centro Comune': this.centroComune, Monitoraggio: this.lyrBreadcrumbs};
-    this.objBaseMaps = { Street: L.tileLayer(this.lyrStreet, this.streetMapOptions), Satellite: L.tileLayer(this.lyrSatellite, this.satelliteMapOptions)};
+    this.objBaseMaps = {
+      Street: L.tileLayer(this.lyrStreet, this.streetMapOptions),
+      Satellite: L.tileLayer(this.lyrSatellite, this.satelliteMapOptions),
+      Navigazione: L.tileLayer(this.lyrNavigation, this.navigationMapOptions),
+      Outdoors: L.tileLayer(this.lyrOutdoor, this.outdoorsMapOptions)
+    };
     this.ctlLayers = L.control.layers(this.objBaseMaps, this.objOverlays);
     this.ctlScale = L.control.scale({ position: 'bottomleft', metric: true, maxWidth: 200, imperial: false });
   }
@@ -219,6 +227,14 @@ export class MapManagerComponent implements OnInit {
     }, this.intervalTrack * 1000);
   }
 
+  onClickMapMenuInfo(e: any) {
+    const collInfo = $('.collapseInfo')
+    if (collInfo.hasClass('in')) { collInfo.removeClass('in'); }
+    else { collInfo.addClass('in'); }
+  }
+
+
+  // *******************UTILITI********************
   randomizePos(e: any) {
     const offsetX = Math.random() * 0.00500 - 0.0025;
     const offsetY = Math.random() * 0.00500 - 0.0025;
@@ -228,16 +244,8 @@ export class MapManagerComponent implements OnInit {
     return e;
   }
 
-  onClickMapMenuInfo(e: any) {
-    if ($('.collapseInfo').hasClass('in')) { $('.collapseInfo').removeClass('in'); }
-    else { $('.collapseInfo').addClass('in'); }
-  }
-
-
-  // *******************UTILITI********************
   sortSelect(id: any) {
     const sel = $(`#${id}`);
-    // tslint:disable-next-line:variable-name
     const opts_list = sel.find('option');
     (opts_list as any).sort((a: any, b: any) => $(a).text() > $(b).text() ? 1 : -1);
     sel.empty().append(opts_list).val('');
@@ -246,7 +254,6 @@ export class MapManagerComponent implements OnInit {
   opacityMunicipi(municipi: any) {
     (municipi.sourceTarget.options.fillOpacity == 0) ? municipi.target.setStyle({ fillOpacity: 0.3 }) : municipi.target.setStyle({ fillOpacity: 0 });
   }
-
 
   onClickMapMenu(e: any) { this.sortSelect('map_province'); }
 }
