@@ -3,9 +3,18 @@
   <div id="mapid">
     <div class="collapseInfo container-fluid">
       <div class="row">
-        <div class="col-12">
-          <h5 class="text-light">Latitudine: {{posCurrent.lat}}</h5>
-          <h5 class="text-light">Longitudine: {{posCurrent.lng}}</h5>
+        <div class="col-0 pl-2">
+          <h5 class="text-light">Posizione corrente: ({{posCurrent.lat}}s )</h5>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-0 pl-2">
+          <h5 class="text-light">Latitudine: {{posCurrent.lat | number:'.1-6'}}</h5>
+        </div>
+        <div class="col-0 pl-2">
+          <h5 class="text-light">Longitudine: {{posCurrent.lng | number:'.1-6'}}</h5>
+        </div>
+        <div class="col-0 pl-2">
           <h5 class="text-light">Timer: {{posLastTime | date:'HH:mm:ss'}}</h5>
         </div>
       </div>
@@ -48,9 +57,6 @@
         </div>
         <div class="row">
           <div class="col-12">
-            <p>Lat: {{posCurrent.lat}}</p>
-            <p>Lng: {{posCurrent.lng}}</p>
-            <p>Ora: {{posLastTime | date:'HH:mm:ss'}}</p>
             <!--        <form>
                         <div class="form-group-sm mb-1">
                     <label for="map_regione">Regione</label>

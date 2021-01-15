@@ -140,6 +140,7 @@ export class MapManagerComponent implements OnInit {
     this.markerLoc.setLatLng(e.latlng).remove().addTo(this.map);
     this.circleLoc.setLatLng(e.latlng).remove().addTo(this.map);
     this.circleLoc.setRadius(e.accuracy);
+    console.log(e);
     this.posCurrent = { lat: e.latlng.lat, lng: e.latlng.lng, accuracy: e.accuracy};
     this.posLastTime = new Date();
   }
