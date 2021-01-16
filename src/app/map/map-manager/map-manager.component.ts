@@ -8,11 +8,15 @@ import * as L from 'leaflet';
 import 'leaflet.heat';
 import 'leaflet.markercluster';
 
+//TURF
+import * as turf from '@turf/turf';
+
 
 // RXJS
 import { from, fromEvent, of } from 'rxjs';
 import { tap, map, switchMap, debounceTime, filter, catchError, distinct, } from 'rxjs/operators';
 import { MapManagerService } from './map-manager-service';
+
 
 interface MunicipoFeature {
   geometry: {
@@ -49,7 +53,7 @@ interface Provincia {
   nome: string;
 }
 
-interface PosCurrent {
+interface PosizioneGPS {
   lat: number;
   lng: number;
   accuracy: number;
@@ -89,9 +93,12 @@ export class MapManagerComponent implements OnInit {
   private tracking: any;
   private markerLoc!: L.Marker;
   private circleLoc!: L.Circle;
-  public posCurrent: PosCurrent = { lat: 0, lng: 0, accuracy: 0, timer: new Date()};
+  public posCurrent: PosizioneGPS = { lat: 0, lng: 0, accuracy: 0, timer: new Date()};
+  public posPrevious!: PosizioneGPS;
   public intervalGeoLoc = 3;
   public intervalTrack = 6;
+  public velocity :number = 0;
+  public distance :number = 0;
 
   private streetMapOptions = { attribution: '', maxZoom: 18, id: 'street', tileSize: 512, zoomOffset: -1, accessToken: 'no-token' };
   private satelliteMapOptions = { attribution: '', maxZoom: 18, id: 'satellite', tileSize: 512, zoomOffset: -1, accessToken: 'no-token' };
@@ -141,10 +148,17 @@ export class MapManagerComponent implements OnInit {
     this.markerLoc.setLatLng(e.latlng).remove().addTo(this.map);
     this.circleLoc.setLatLng(e.latlng).remove().addTo(this.map);
     this.circleLoc.setRadius(e.accuracy);
-    let date = new Date(e.timestamp)
-    console.log(date)
-    this.posCurrent = { lat: e.latlng.lat, lng: e.latlng.lng, accuracy: e.accuracy, timer: date};
+    this.posCurrent = { lat: e.latlng.lat, lng: e.latlng.lng, accuracy: e.accuracy, timer: new Date(e.timestamp)};
+
+    if(this.posPrevious){
+      this.distance = turf.distance(turf.point([this.posCurrent.lat, this.posCurrent.lng]), turf.point([this.posPrevious.lat, this.posPrevious.lng]));
+      //Velocità = distanza-metri/tempo-secondi
+      this.velocity = (this.distance * 1000)/((this.posCurrent.timer.getTime() - this.posPrevious.timer.getTime())/1000);
+    }
+
+    this.posPrevious = this.posCurrent
   }
+
 
   onLocationError(e: { message: any; }) {
     this.toaster.error(e.message);
@@ -234,7 +248,6 @@ export class MapManagerComponent implements OnInit {
     if (collInfo.hasClass('in')) { collInfo.removeClass('in'); }
     else { collInfo.addClass('in'); }
   }
-
 
   // *******************UTILITI********************
   randomizePos(e: any) {

@@ -4,12 +4,12 @@
     <div class="collapseInfo container-fluid">
       <div class="row">
         <div class="col-0 pl-2">
-          <h5 class="text-light">Posizione corrente: ({{posCurrent.lat}}s )</h5>
+          <h5 class="text-light">Accuratezza : &plusmn; {{posCurrent.accuracy | number: '.1-2' : 'it-IT'}} m</h5>
         </div>
       </div>
       <div class="row">
         <div class="col-0 pl-2">
-          <h5 class="text-light">Timer: {{posCurrent.timer | date:'HH:mm:ss'}}</h5>
+          <h5 class="text-light">Ora: {{posCurrent.timer | date:'HH:mm:ss'}}</h5>
         </div>
       </div>
       <div class="row">
@@ -18,6 +18,11 @@
         </div>
         <div class="col-0 pl-2">
           <h5 class="text-light">Longitudine: {{posCurrent.lng | number:'.1-6'}}</h5>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-0 pl-2">
+          <h5 class="text-light">Velocità: {{velocity | number:'.1-4'}} m/s</h5>
         </div>
       </div>
     </div>
