@@ -7,6 +7,8 @@ import localeIt from '@angular/common/locales/it';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http'
 import { NgxSpinnerModule } from "ngx-spinner";
+import {DataTablesModule} from 'angular-datatables';
+
 
 
 //Currency format
@@ -68,7 +70,8 @@ import { SignupComponent } from './ums/signup/signup.component';
     FormsModule,
     HttpClientModule,
     NgxSpinnerModule,
-    LeafletModule
+    LeafletModule,
+    DataTablesModule
   ],
   providers: [UserService, GoogleBookService, MapManagerService],
   bootstrap: [AppComponent]

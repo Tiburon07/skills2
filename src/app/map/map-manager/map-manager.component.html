@@ -33,8 +33,23 @@
     </div>
     <div class="collapsePoints container-fluid text-dark">
       <div class="row">
-        <div class="col-0 pl-2">
-          <h5>Lista punti salvati</h5>
+        <div class="col-12 pl-2 pt-2">
+          <table id="tbListaPoints" class="table table-striped table-bordered table-sm row-border hover" datatable [dtOptions]="dtOptions">
+            <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Website</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let group of data">
+              <td>{{group.name}}</td>
+              <td>{{group.email}}</td>
+              <td>{{group.website}}</td>
+            </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>

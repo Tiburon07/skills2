@@ -107,6 +107,20 @@ export class MapManagerComponent implements OnInit {
   private navigationMapOptions = { attribution: '', maxZoom: 18, minNativeZoom: 1, id: 'navigazione', tileSize: 512, zoomOffset: -1, accessToken: 'no-token' };
   private outdoorsMapOptions = { attribution: '', maxZoom: 18, minNativeZoom: 1, id: 'outdoor', tileSize: 512, zoomOffset: -1, accessToken: 'no-token' };
 
+  dtOptions: any = {};
+  public data = [
+    {name: 'Ajay', email: 'therichpost@gmail.com', website:'therichpost.com'},
+    {name: 'Jas', email: 'therichpost@gmail.com', website:'therichpost.com'},
+    {name: 'therichpost', email: 'therichpost@gmail.com', website:'therichpost.com'},
+    {name: 'therichpost', email: 'therichpost@gmail.com', website:'therichpost.com'},
+    {name: 'Jas', email: 'therichpost@gmail.com', website:'therichpost.com'},
+    {name: 'therichpost', email: 'therichpost@gmail.com', website:'therichpost.com'},
+    {name: 'therichpost', email: 'therichpost@gmail.com', website:'therichpost.com'},
+    {name: 'Jas', email: 'therichpost@gmail.com', website:'therichpost.com'},
+    {name: 'therichpost', email: 'therichpost@gmail.com', website:'therichpost.com'},
+    {name: 'therichpost', email: 'therichpost@gmail.com', website:'therichpost.com'},
+  ];
+
   constructor(private spinner: NgxSpinnerService, private toaster: ToastrService, private service: MapManagerService) {
     this.confiniComune = L.layerGroup();
     this.centroComune = L.layerGroup();
@@ -120,7 +134,14 @@ export class MapManagerComponent implements OnInit {
     };
     this.ctlLayers = L.control.layers(this.objBaseMaps, this.objOverlays);
     this.ctlScale = L.control.scale({ position: 'bottomleft', metric: true, maxWidth: 200, imperial: false });
-  }
+
+    this.dtOptions = {
+      pagingType: 'full_numbers',
+      pageLength: 6,
+      lengthMenu: [5, 10, 25],
+      processing: true
+      }
+    }
 
   ngOnInit(): void {
 
@@ -274,6 +295,8 @@ export class MapManagerComponent implements OnInit {
     if(collInfo.hasClass('inInfo')){
       collInfo.removeClass('inInfo')
     }
+
+    console.log(this.lyrBreadcrumbs.getLayers())
 
   }
 
