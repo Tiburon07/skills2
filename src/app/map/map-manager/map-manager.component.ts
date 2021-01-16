@@ -108,7 +108,7 @@ export class MapManagerComponent implements OnInit {
   private outdoorsMapOptions = { attribution: '', maxZoom: 18, minNativeZoom: 1, id: 'outdoor', tileSize: 512, zoomOffset: -1, accessToken: 'no-token' };
 
   dtOptions: any = {};
-  public data = [
+  public dataSetPoints = [
     {name: 'Ajay', email: 'therichpost@gmail.com', website:'therichpost.com'},
     {name: 'Jas', email: 'therichpost@gmail.com', website:'therichpost.com'},
     {name: 'therichpost', email: 'therichpost@gmail.com', website:'therichpost.com'},
@@ -116,6 +116,40 @@ export class MapManagerComponent implements OnInit {
     {name: 'Jas', email: 'therichpost@gmail.com', website:'therichpost.com'},
     {name: 'therichpost', email: 'therichpost@gmail.com', website:'therichpost.com'},
     {name: 'therichpost', email: 'therichpost@gmail.com', website:'therichpost.com'},
+    {name: 'Jas', email: 'therichpost@gmail.com', website:'therichpost.com'},
+    {name: 'therichpost', email: 'therichpost@gmail.com', website:'therichpost.com'},
+    {name: 'therichpost', email: 'therichpost@gmail.com', website:'therichpost.com'},
+    {name: 'Ajay', email: 'therichpost@gmail.com', website:'therichpost.com'},
+    {name: 'Jas', email: 'therichpost@gmail.com', website:'therichpost.com'},
+    {name: 'therichpost', email: 'therichpost@gmail.com', website:'therichpost.com'},
+    {name: 'therichpost', email: 'therichpost@gmail.com', website:'therichpost.com'},
+    {name: 'Jas', email: 'therichpost@gmail.com', website:'therichpost.com'},
+    {name: 'therichpost', email: 'therichpost@gmail.com', website:'therichpost.com'},
+    {name: 'therichpost', email: 'therichpost@gmail.com', website:'therichpost.com'},
+    {name: 'Jas', email: 'therichpost@gmail.com', website:'therichpost.com'},
+    {name: 'therichpost', email: 'therichpost@gmail.com', website:'therichpost.com'},
+    {name: 'therichpost', email: 'therichpost@gmail.com', website:'therichpost.com'},
+    {name: 'Ajay', email: 'therichpost@gmail.com', website:'therichpost.com'},
+    {name: 'Jas', email: 'therichpost@gmail.com', website:'therichpost.com'},
+    {name: 'therichpost', email: 'therichpost@gmail.com', website:'therichpost.com'},
+    {name: 'therichpost', email: 'therichpost@gmail.com', website:'therichpost.com'},
+    {name: 'Jas', email: 'therichpost@gmail.com', website:'therichpost.com'},
+    {name: 'therichpost', email: 'therichpost@gmail.com', website:'therichpost.com'},
+    {name: 'therichpost', email: 'therichpost@gmail.com', website:'therichpost.com'},
+    {name: 'Jas', email: 'therichpost@gmail.com', website:'therichpost.com'},
+    {name: 'therichpost', email: 'therichpost@gmail.com', website:'therichpost.com'},
+    {name: 'therichpost', email: 'therichpost@gmail.com', website:'therichpost.com'},
+    {name: 'Ajay', email: 'therichpost@gmail.com', website:'therichpost.com'},
+    {name: 'Jas', email: 'therichpost@gmail.com', website:'therichpost.com'},
+    {name: 'therichpost', email: 'therichpost@gmail.com', website:'therichpost.com'},
+    {name: 'therichpost', email: 'therichpost@gmail.com', website:'therichpost.com'},
+    {name: 'Jas', email: 'therichpost@gmail.com', website:'therichpost.com'},
+    {name: 'therichpost', email: 'therichpost@gmail.com', website:'therichpost.com'},
+    {name: 'therichpost', email: 'therichpost@gmail.com', website:'therichpost.com'},
+    {name: 'Jas', email: 'therichpost@gmail.com', website:'therichpost.com'},
+    {name: 'therichpost', email: 'therichpost@gmail.com', website:'therichpost.com'},
+    {name: 'therichpost', email: 'therichpost@gmail.com', website:'therichpost.com'},
+    {name: 'Ajay', email: 'therichpost@gmail.com', website:'therichpost.com'},
     {name: 'Jas', email: 'therichpost@gmail.com', website:'therichpost.com'},
     {name: 'therichpost', email: 'therichpost@gmail.com', website:'therichpost.com'},
     {name: 'therichpost', email: 'therichpost@gmail.com', website:'therichpost.com'},
@@ -136,9 +170,29 @@ export class MapManagerComponent implements OnInit {
     this.ctlScale = L.control.scale({ position: 'bottomleft', metric: true, maxWidth: 200, imperial: false });
 
     this.dtOptions = {
-      pagingType: 'full_numbers',
+      pagingType: 'full',
       pageLength: 6,
-      lengthMenu: [5, 10, 25],
+      ordering: false,
+      searching: false,
+      info: true,
+      lengthChange: false,
+      language: {
+        "search": "Cerca: ",
+        "lengthMenu": " _MENU_ records per pagina",
+        "zeroRecords": "Nessun elemento trovato",
+        "info": "Mostra pagina _PAGE_ di _PAGES_",
+        "infoEmpty": "Nessun record",
+        "infoFiltered": "(Filtrato da _MAX_ totali records)",
+        'loadingRecords': '&nbsp;',
+        'processing': '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Loading...</span>',
+        "paginate": {
+          numbers: 5,
+          "first": '<span class="sr-only">Prima pagina</span><i class="fas fa-angle-double-left"></i>',
+          "previous": '<span class="sr-only">Pagina precedente</span><i class="fas fa-angle-left"></i>',
+          "next": '<span class="sr-only">Pagina successiva</span><i class="fas fa-angle-right"></i>',
+          "last": '<span class="sr-only">Ultima pagina</span><i class="fas fa-angle-double-right"></i>'
+        }
+      },
       processing: true
       }
     }
