@@ -25,6 +25,11 @@
           <h5 class="text-light">Velocità: {{velocity | number:'.1-4'}} m/s</h5>
         </div>
       </div>
+      <div class="row">
+        <div class="col-0 pl-2">
+          <h5 class="text-light">Angolo: {{bearing | number:'.1-4'}}&deg;</h5>
+        </div>
+      </div>
     </div>
   </div>
   <button (click)="onClickMapMenuInfo($event)" class="btn btn-info map-menu-info" role="button" aria-label="Map menu"><i class="fas fa-info-circle"></i></button>
@@ -61,6 +66,21 @@
             </div>
           </div>
           <div class="col-1"><p>60s</p></div>
+        </div>
+        <div class="form-group">
+          <div class="custom-control custom-switch custom-switch-on-danger">
+            <input (change)="onChangeAccuracy($event)" type="checkbox" class="custom-control-input" id="switchAccuracy">
+            <label class="custom-control-label" for="switchAccuracy">Accuratezza ({{intervalAccuracy}}m)</label>
+          </div>
+        </div>
+        <div id="sldrAccuracy" class="row">
+          <div class="col-1 pr-3">5m &nbsp;</div>
+          <div class="col-8">
+            <div class="form-group text-success">
+              <input (change)="sliderAccuracy($event)" value="30" type="range" class="custom-range custom-range-danger mt-1 " min="5" max="50" step="5" id="inpAccuracy">
+            </div>
+          </div>
+          <div class="col-1"><p>50m</p></div>
         </div>
         <div class="row">
           <div class="col-12">

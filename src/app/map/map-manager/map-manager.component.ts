@@ -9,7 +9,7 @@ import 'leaflet.heat';
 import 'leaflet.markercluster';
 
 //TURF
-import * as turf from '@turf/turf';
+import * as turf from '@turf/turf'
 
 
 // RXJS
@@ -97,8 +97,10 @@ export class MapManagerComponent implements OnInit {
   public posPrevious!: PosizioneGPS;
   public intervalGeoLoc = 3;
   public intervalTrack = 6;
+  public intervalAccuracy = 30;
   public velocity :number = 0;
   public distance :number = 0;
+  public bearing: number = 0;
 
   private streetMapOptions = { attribution: '', maxZoom: 18, id: 'street', tileSize: 512, zoomOffset: -1, accessToken: 'no-token' };
   private satelliteMapOptions = { attribution: '', maxZoom: 18, id: 'satellite', tileSize: 512, zoomOffset: -1, accessToken: 'no-token' };
@@ -144,21 +146,26 @@ export class MapManagerComponent implements OnInit {
   }
 
   onLocationFound(e: any): void {
-    e = this.randomizePos(e);
-    this.markerLoc.setLatLng(e.latlng).remove().addTo(this.map);
-    this.circleLoc.setLatLng(e.latlng).remove().addTo(this.map);
-    this.circleLoc.setRadius(e.accuracy);
-    this.posCurrent = { lat: e.latlng.lat, lng: e.latlng.lng, accuracy: e.accuracy, timer: new Date(e.timestamp)};
+    let filterAccuracy = 0;
+    if($('#switchAccuracy').prop('checked')) filterAccuracy = this.intervalAccuracy;
+    else filterAccuracy = 100000;
 
-    if(this.posPrevious){
-      this.distance = turf.distance(turf.point([this.posCurrent.lat, this.posCurrent.lng]), turf.point([this.posPrevious.lat, this.posPrevious.lng]));
-      //Velocità = distanza-metri/tempo-secondi
-      this.velocity = (this.distance * 1000)/((this.posCurrent.timer.getTime() - this.posPrevious.timer.getTime())/1000);
+    if(e.accuracy<filterAccuracy){
+      e = this.randomizePos(e);
+      this.markerLoc.setLatLng(e.latlng).remove().addTo(this.map);
+      this.circleLoc.setLatLng(e.latlng).remove().addTo(this.map);
+      this.circleLoc.setRadius(e.accuracy);
+      this.posCurrent = { lat: e.latlng.lat, lng: e.latlng.lng, accuracy: e.accuracy, timer: new Date(e.timestamp)};
+
+      if(this.posPrevious){
+        this.distance = turf.distance(turf.point([this.posCurrent.lat, this.posCurrent.lng]), turf.point([this.posPrevious.lat, this.posPrevious.lng]));
+        this.bearing = turf.bearing(turf.point([this.posCurrent.lat, this.posCurrent.lng]), turf.point([this.posPrevious.lat, this.posPrevious.lng]));
+        this.velocity = (this.distance * 1000)/((this.posCurrent.timer.getTime() - this.posPrevious.timer.getTime())/1000);
+      }
+
+      this.posPrevious = this.posCurrent
     }
-
-    this.posPrevious = this.posCurrent
   }
-
 
   onLocationError(e: { message: any; }) {
     this.toaster.error(e.message);
@@ -231,6 +238,16 @@ export class MapManagerComponent implements OnInit {
     if ($('#switchLoc').prop('checked')) {
       clearInterval(this.tracking);
       this.startTracking();
+    }
+  }
+
+  sliderAccuracy(e: any){
+    this.intervalAccuracy = e.target.value;
+  }
+
+  onChangeAccuracy(e:any){
+    if (e.target.checked){
+
     }
   }
 
