@@ -93,10 +93,10 @@ export class MapManagerComponent implements OnInit {
   private tracking: any;
   private markerLoc!: L.Marker;
   private circleLoc!: L.Circle;
-  public posCurrent: PosizioneGPS = { lat: 0, lng: 0, accuracy: 0, timer: new Date()};
+  public posCurrent: PosizioneGPS = { lat: 0, lng: 0, accuracy: 0, timer: new Date(new Date().setHours(0,0,0,0))};
   public posPrevious!: PosizioneGPS;
-  public intervalGeoLoc = 3;
-  public intervalTrack = 6;
+  public intervalGeoLoc = 1;
+  public intervalTrack = 3;
   public intervalAccuracy = 30;
   public velocity :number = 0;
   public distance :number = 0;
@@ -146,11 +146,6 @@ export class MapManagerComponent implements OnInit {
   }
 
   onLocationFound(e: any): void {
-    let filterAccuracy = 0;
-    if($('#switchAccuracy').prop('checked')) filterAccuracy = this.intervalAccuracy;
-    else filterAccuracy = 100000;
-
-    if(e.accuracy<filterAccuracy){
       e = this.randomizePos(e);
       this.markerLoc.setLatLng(e.latlng).remove().addTo(this.map);
       this.circleLoc.setLatLng(e.latlng).remove().addTo(this.map);
@@ -164,7 +159,6 @@ export class MapManagerComponent implements OnInit {
       }
 
       this.posPrevious = this.posCurrent
-    }
   }
 
   onLocationError(e: { message: any; }) {
@@ -245,18 +239,20 @@ export class MapManagerComponent implements OnInit {
     this.intervalAccuracy = e.target.value;
   }
 
-  onChangeAccuracy(e:any){
-    if (e.target.checked){
-
-    }
-  }
+  onChangeAccuracy(e:any){}
 
   startTracking() {
     this.tracking = setInterval(() => {
-      let radius = Math.min(200, this.posCurrent.accuracy / 2);
-      radius = Math.max(10, radius);
-      const mrkBreadcrumb = L.circle([this.posCurrent.lat, this.posCurrent.lng], { radius, color: 'green' }).addTo(this.map);
-      this.lyrBreadcrumbs.addLayer(mrkBreadcrumb);
+      let filterAccuracy = 0;
+      if($('#switchAccuracy').prop('checked')) filterAccuracy = this.intervalAccuracy;
+      else filterAccuracy = 1000000;
+
+      if(this.posCurrent.accuracy < filterAccuracy){
+        let radius = Math.min(200, this.posCurrent.accuracy / 2);
+        radius = Math.max(10, radius);
+        const mrkBreadcrumb = L.circle([this.posCurrent.lat, this.posCurrent.lng], { radius, color: 'green' }).addTo(this.map);
+        this.lyrBreadcrumbs.addLayer(mrkBreadcrumb);
+      }
     }, this.intervalTrack * 1000);
   }
 
@@ -267,18 +263,18 @@ export class MapManagerComponent implements OnInit {
   }
 
   // *******************UTILITI********************
-  randomizePos(e: any) {
-    const offsetX = Math.random() * 0.000100 - 0.00025;
-    const offsetY = Math.random() * 0.000100 - 0.00025;
-    e.latitude = e.latitude + offsetX;
-    e.longitude = e.longitude + offsetY;
-    e.latlng = L.latLng([e.latitude, e.longitude]);
-    return e;
-  }
-
   // randomizePos(e: any) {
+  //   const offsetX = Math.random() * 0.000100 - 0.00025;
+  //   const offsetY = Math.random() * 0.000100 - 0.00025;
+  //   e.latitude = e.latitude + offsetX;
+  //   e.longitude = e.longitude + offsetY;
+  //   e.latlng = L.latLng([e.latitude, e.longitude]);
   //   return e;
   // }
+
+  randomizePos(e: any) {
+    return e;
+  }
 
   sortSelect(id: any) {
     const sel = $(`#${id}`);
