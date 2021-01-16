@@ -111,7 +111,7 @@ export class MapManagerComponent implements OnInit {
     this.confiniComune = L.layerGroup();
     this.centroComune = L.layerGroup();
     this.lyrBreadcrumbs = L.layerGroup();
-    this.objOverlays = { 'Confini Comune': this.confiniComune, 'Centro Comune': this.centroComune, Monitoraggio: this.lyrBreadcrumbs};
+    this.objOverlays = { Confini: this.confiniComune, Comune: this.centroComune, Monitoraggio: this.lyrBreadcrumbs};
     this.objBaseMaps = {
       Street: L.tileLayer(this.lyrStreet, this.streetMapOptions),
       Satellite: L.tileLayer(this.lyrSatellite, this.satelliteMapOptions),
@@ -130,7 +130,6 @@ export class MapManagerComponent implements OnInit {
     this.map.addControl(this.ctlLayers);
     this.map.addControl(this.ctlScale);
     this.map.addLayer(this.objBaseMaps.Street);
-    this.map.addLayer(this.lyrBreadcrumbs);
 
     // GeoLocation
     this.markerLoc = L.marker([41.902782, 12.496366], { icon: L.divIcon({ iconSize: [24, 12], iconAnchor: [12, 12], html: '<i class="fa fa-crosshairs fa-2x text-danger"></i>', className: 'divCross' })});
@@ -248,18 +247,46 @@ export class MapManagerComponent implements OnInit {
       else filterAccuracy = 1000000;
 
       if(this.posCurrent.accuracy < filterAccuracy){
-        let radius = Math.min(200, this.posCurrent.accuracy / 2);
-        radius = Math.max(10, radius);
-        const mrkBreadcrumb = L.circle([this.posCurrent.lat, this.posCurrent.lng], { radius, color: 'green' }).addTo(this.map);
-        this.lyrBreadcrumbs.addLayer(mrkBreadcrumb);
+        this.addBreadcrumbs()
       }
     }, this.intervalTrack * 1000);
   }
 
+  addBreadcrumbs(){
+    if(this.posCurrent){
+      let radius = Math.min(200, this.posCurrent.accuracy / 2);
+      radius = Math.max(10, radius);
+      const mrkBreadcrumb = L.circle([this.posCurrent.lat, this.posCurrent.lng], { radius, color: 'green' }).addTo(this.map);
+      mrkBreadcrumb.bindPopup(`<h4>${L.Util.stamp(mrkBreadcrumb)}`)
+      this.lyrBreadcrumbs.addLayer(mrkBreadcrumb);
+    }
+  }
+
+  poulatePoints(point: PosizioneGPS) {
+    console.log(point);
+  }
+
+  onClickMapMenuPoint(e:any){
+    const collPoints = $('.collapsePoints');
+    (collPoints.hasClass('inPoints')) ? collPoints.removeClass('inPoints') : collPoints.addClass('inPoints');
+
+    const collInfo = $('.collapseInfo');
+    if(collInfo.hasClass('inInfo')){
+      collInfo.removeClass('inInfo')
+    }
+
+  }
+
   onClickMapMenuInfo(e: any) {
-    const collInfo = $('.collapseInfo')
-    if (collInfo.hasClass('in')) { collInfo.removeClass('in'); }
-    else { collInfo.addClass('in'); }
+    const collInfo = $('.collapseInfo');
+    (collInfo.hasClass('inInfo')) ? collInfo.removeClass('inInfo') : collInfo.addClass('inInfo');
+
+    const collPoints = $('.collapsePoints');
+    if(collPoints.hasClass('inPoints')){
+      collPoints.removeClass('inPoints')
+    }
+
+
   }
 
   // *******************UTILITI********************

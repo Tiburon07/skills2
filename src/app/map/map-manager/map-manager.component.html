@@ -1,38 +1,46 @@
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
   <div id="mapid">
-    <div class="collapseInfo container-fluid">
+    <div class="collapseInfo container-fluid text-light">
       <div class="row">
         <div class="col-0 pl-2">
-          <h5 class="text-light">Accuratezza : &plusmn; {{posCurrent.accuracy | number: '.1-2' : 'it-IT'}} m</h5>
+          <h5>Accuratezza : &plusmn; {{posCurrent.accuracy | number: '.1-2' : 'it-IT'}} m</h5>
         </div>
       </div>
       <div class="row">
         <div class="col-0 pl-2">
-          <h5 class="text-light">Ora: {{posCurrent.timer | date:'HH:mm:ss'}}</h5>
+          <h5>Ora: {{posCurrent.timer | date:'HH:mm:ss'}}</h5>
         </div>
       </div>
       <div class="row">
         <div class="col-0 pl-2">
-          <h5 class="text-light">Latitudine: {{posCurrent.lat | number:'.1-6'}}</h5>
+          <h5>Latitudine: {{posCurrent.lat | number:'.1-6'}}</h5>
         </div>
         <div class="col-0 pl-2">
-          <h5 class="text-light">Longitudine: {{posCurrent.lng | number:'.1-6'}}</h5>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-0 pl-2">
-          <h5 class="text-light">Velocità: {{velocity | number:'.1-4'}} m/s</h5>
+          <h5>Longitudine: {{posCurrent.lng | number:'.1-6'}}</h5>
         </div>
       </div>
       <div class="row">
         <div class="col-0 pl-2">
-          <h5 class="text-light">Angolo: {{bearing | number:'.1-4'}}&deg;</h5>
+          <h5>Velocità: {{velocity | number:'.1-4'}} m/s</h5>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-0 pl-2">
+          <h5>Angolo: {{bearing | number:'.1-4'}}&deg;</h5>
+        </div>
+      </div>
+    </div>
+    <div class="collapsePoints container-fluid text-dark">
+      <div class="row">
+        <div class="col-0 pl-2">
+          <h5>Lista punti salvati</h5>
         </div>
       </div>
     </div>
   </div>
-  <button (click)="onClickMapMenuInfo($event)" class="btn btn-info map-menu-info" role="button" aria-label="Map menu"><i class="fas fa-info-circle"></i></button>
+  <button (click)="onClickMapMenuPoint($event)" class="btn btn-success map-menu-point" role="button" aria-label="Map menu point"><i class="fas fa-crosshairs"></i></button>
+  <button (click)="onClickMapMenuInfo($event)" class="btn btn-info map-menu-info" role="button" aria-label="Map menu info"><i class="fas fa-info-circle"></i></button>
   <button (click)="onClickMapMenu($event)" data-widget="control-sidebar" data-slide="true" class="btn btn-secondary map-menu" role="button" aria-label="Map menu"><i class="fas fa-cog"></i></button>
   </div>
 

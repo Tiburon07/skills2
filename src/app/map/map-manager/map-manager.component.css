@@ -12,7 +12,7 @@
 }
 
 .map-menu-info {
-  bottom: 7.15rem;
+  bottom: 10.05rem;
   position: fixed;
   right: 1.25rem;
   z-index: 1032;
@@ -20,13 +20,14 @@
   transition: 5s;
 }
 
-.map-menu-settings {
-  bottom: 7.25rem;
+.map-menu-point {
+  bottom: 7.15rem;
   position: fixed;
   right: 1.25rem;
   z-index: 1032;
   border-radius: 40px;
 }
+
 
 #sel_map_provincia {
   height: 38px!important;
@@ -47,6 +48,7 @@
 .collapseInfo {
   display: block;
   background-color: cadetblue;
+  //background-color: #f4f6f9;
   width: 100%;
   position: absolute;
   z-index: 401;
@@ -57,7 +59,24 @@
   bottom: 0rem;
 }
 
-.collapseInfo.in {
+.collapseInfo.inInfo {
+  height: 20rem !important;
+}
+
+.collapsePoints {
+  display: block;
+  background-color: #f4f6f9;
+  width: 100%;
+  position: absolute;
+  z-index: 401;
+  opacity: 0.7;
+  transition: height 0.5s ease, box-shadow 0.5s ease;
+  height: 0rem !important;
+  overflow: hidden;
+  bottom: 0rem;
+}
+
+.collapsePoints.inPoints {
   height: 24rem !important;
 }
 
