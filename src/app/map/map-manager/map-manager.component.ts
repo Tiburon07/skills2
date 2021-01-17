@@ -11,11 +11,14 @@ import 'leaflet.markercluster';
 //TURF
 import * as turf from '@turf/turf'
 
+//AG-GRID
+import { BtnCellRenderer } from './btn-cell-renderer.component';
 
 // RXJS
 import { from, fromEvent, of } from 'rxjs';
 import { tap, map, switchMap, debounceTime, filter, catchError, distinct, } from 'rxjs/operators';
 import { MapManagerService } from './map-manager-service';
+import {Module} from 'ag-grid-community';
 
 
 interface MunicipoFeature {
@@ -107,53 +110,32 @@ export class MapManagerComponent implements OnInit {
   private navigationMapOptions = { attribution: '', maxZoom: 18, minNativeZoom: 1, id: 'navigazione', tileSize: 512, zoomOffset: -1, accessToken: 'no-token' };
   private outdoorsMapOptions = { attribution: '', maxZoom: 18, minNativeZoom: 1, id: 'outdoor', tileSize: 512, zoomOffset: -1, accessToken: 'no-token' };
 
-  dtOptions: any = {};
-  public dataSetPoints = [
-    {name: 'Ajay', email: 'therichpost@gmail.com', website:'therichpost.com'},
-    {name: 'Jas', email: 'therichpost@gmail.com', website:'therichpost.com'},
-    {name: 'therichpost', email: 'therichpost@gmail.com', website:'therichpost.com'},
-    {name: 'therichpost', email: 'therichpost@gmail.com', website:'therichpost.com'},
-    {name: 'Jas', email: 'therichpost@gmail.com', website:'therichpost.com'},
-    {name: 'therichpost', email: 'therichpost@gmail.com', website:'therichpost.com'},
-    {name: 'therichpost', email: 'therichpost@gmail.com', website:'therichpost.com'},
-    {name: 'Jas', email: 'therichpost@gmail.com', website:'therichpost.com'},
-    {name: 'therichpost', email: 'therichpost@gmail.com', website:'therichpost.com'},
-    {name: 'therichpost', email: 'therichpost@gmail.com', website:'therichpost.com'},
-    {name: 'Ajay', email: 'therichpost@gmail.com', website:'therichpost.com'},
-    {name: 'Jas', email: 'therichpost@gmail.com', website:'therichpost.com'},
-    {name: 'therichpost', email: 'therichpost@gmail.com', website:'therichpost.com'},
-    {name: 'therichpost', email: 'therichpost@gmail.com', website:'therichpost.com'},
-    {name: 'Jas', email: 'therichpost@gmail.com', website:'therichpost.com'},
-    {name: 'therichpost', email: 'therichpost@gmail.com', website:'therichpost.com'},
-    {name: 'therichpost', email: 'therichpost@gmail.com', website:'therichpost.com'},
-    {name: 'Jas', email: 'therichpost@gmail.com', website:'therichpost.com'},
-    {name: 'therichpost', email: 'therichpost@gmail.com', website:'therichpost.com'},
-    {name: 'therichpost', email: 'therichpost@gmail.com', website:'therichpost.com'},
-    {name: 'Ajay', email: 'therichpost@gmail.com', website:'therichpost.com'},
-    {name: 'Jas', email: 'therichpost@gmail.com', website:'therichpost.com'},
-    {name: 'therichpost', email: 'therichpost@gmail.com', website:'therichpost.com'},
-    {name: 'therichpost', email: 'therichpost@gmail.com', website:'therichpost.com'},
-    {name: 'Jas', email: 'therichpost@gmail.com', website:'therichpost.com'},
-    {name: 'therichpost', email: 'therichpost@gmail.com', website:'therichpost.com'},
-    {name: 'therichpost', email: 'therichpost@gmail.com', website:'therichpost.com'},
-    {name: 'Jas', email: 'therichpost@gmail.com', website:'therichpost.com'},
-    {name: 'therichpost', email: 'therichpost@gmail.com', website:'therichpost.com'},
-    {name: 'therichpost', email: 'therichpost@gmail.com', website:'therichpost.com'},
-    {name: 'Ajay', email: 'therichpost@gmail.com', website:'therichpost.com'},
-    {name: 'Jas', email: 'therichpost@gmail.com', website:'therichpost.com'},
-    {name: 'therichpost', email: 'therichpost@gmail.com', website:'therichpost.com'},
-    {name: 'therichpost', email: 'therichpost@gmail.com', website:'therichpost.com'},
-    {name: 'Jas', email: 'therichpost@gmail.com', website:'therichpost.com'},
-    {name: 'therichpost', email: 'therichpost@gmail.com', website:'therichpost.com'},
-    {name: 'therichpost', email: 'therichpost@gmail.com', website:'therichpost.com'},
-    {name: 'Jas', email: 'therichpost@gmail.com', website:'therichpost.com'},
-    {name: 'therichpost', email: 'therichpost@gmail.com', website:'therichpost.com'},
-    {name: 'therichpost', email: 'therichpost@gmail.com', website:'therichpost.com'},
-    {name: 'Ajay', email: 'therichpost@gmail.com', website:'therichpost.com'},
-    {name: 'Jas', email: 'therichpost@gmail.com', website:'therichpost.com'},
-    {name: 'therichpost', email: 'therichpost@gmail.com', website:'therichpost.com'},
-    {name: 'therichpost', email: 'therichpost@gmail.com', website:'therichpost.com'},
+  //AG-GRID
+  private gridParams:any;
+  private gridApi: any;
+  private gridColumnApi: any;
+  public defaultColDef:any;
+
+  public columnDefs = [
+    { field: 'azioni',
+      cellRenderer: 'btnCellRenderer',
+      cellRendererParams: {
+        clicked: function(field: any) {
+          alert(`${field} was clicked`);
+        }
+      },
+      minWidth: 150,
+    },
+    { field: 'id'},
+    { field: 'latitudine'},
+    { field: 'longitudine'}
   ];
+
+  public frameworkComponents = {
+    btnCellRenderer: BtnCellRenderer
+  };
+
+  public rowData = [];
 
   constructor(private spinner: NgxSpinnerService, private toaster: ToastrService, private service: MapManagerService) {
     this.confiniComune = L.layerGroup();
@@ -168,33 +150,11 @@ export class MapManagerComponent implements OnInit {
     };
     this.ctlLayers = L.control.layers(this.objBaseMaps, this.objOverlays);
     this.ctlScale = L.control.scale({ position: 'bottomleft', metric: true, maxWidth: 200, imperial: false });
-
-    this.dtOptions = {
-      pagingType: 'full',
-      pageLength: 6,
-      ordering: false,
-      searching: false,
-      info: true,
-      lengthChange: false,
-      language: {
-        "search": "Cerca: ",
-        "lengthMenu": " _MENU_ records per pagina",
-        "zeroRecords": "Nessun elemento trovato",
-        "info": "Mostra pagina _PAGE_ di _PAGES_",
-        "infoEmpty": "Nessun record",
-        "infoFiltered": "(Filtrato da _MAX_ totali records)",
-        'loadingRecords': '&nbsp;',
-        'processing': '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Loading...</span>',
-        "paginate": {
-          numbers: 5,
-          "first": '<span class="sr-only">Prima pagina</span><i class="fas fa-angle-double-left"></i>',
-          "previous": '<span class="sr-only">Pagina precedente</span><i class="fas fa-angle-left"></i>',
-          "next": '<span class="sr-only">Pagina successiva</span><i class="fas fa-angle-right"></i>',
-          "last": '<span class="sr-only">Ultima pagina</span><i class="fas fa-angle-double-right"></i>'
-        }
-      },
-      processing: true
-      }
+    this.defaultColDef = {
+        flex: 1,
+        cellClass: 'number-cell',
+        resizable: true,
+      };
     }
 
   ngOnInit(): void {
@@ -217,6 +177,15 @@ export class MapManagerComponent implements OnInit {
     // Layers
     this.municipiMap();
     this.clasterMunicipiMap();
+  }
+
+  onGridReady(params:any) {
+    this.gridParams = params;
+    this.gridApi = params.api;
+    this.gridColumnApi = params.columnApi;
+    window.addEventListener('resize', function () {
+        params.api.sizeColumnsToFit();
+    });
   }
 
   onLocationFound(e: any): void {
@@ -334,7 +303,23 @@ export class MapManagerComponent implements OnInit {
       const mrkBreadcrumb = L.circle([this.posCurrent.lat, this.posCurrent.lng], { radius, color: 'green' }).addTo(this.map);
       mrkBreadcrumb.bindPopup(`<h4>${L.Util.stamp(mrkBreadcrumb)}`)
       this.lyrBreadcrumbs.addLayer(mrkBreadcrumb);
+      this.drawPointGrid(this.lyrBreadcrumbs);
     }
+  }
+
+  drawPointGrid(lyrBreadcrumbs:any){
+    this.rowData = [];
+    lyrBreadcrumbs.eachLayer((lyr:any)=>{
+      const point = {azioni:'',
+        id:L.Util.stamp(lyr),
+        latitudine: lyr.getLatLng().lat,
+        longitudine: lyr.getLatLng().lng
+      }
+      // @ts-ignore
+      this.rowData.push(point)
+    })
+    this.gridApi.setRowData(this.rowData);
+    this.gridApi.sizeColumnsToFit();
   }
 
   poulatePoints(point: PosizioneGPS) {
@@ -349,9 +334,7 @@ export class MapManagerComponent implements OnInit {
     if(collInfo.hasClass('inInfo')){
       collInfo.removeClass('inInfo')
     }
-
-    console.log(this.lyrBreadcrumbs.getLayers())
-
+    this.gridApi.sizeColumnsToFit();
   }
 
   onClickMapMenuInfo(e: any) {
@@ -394,6 +377,34 @@ export class MapManagerComponent implements OnInit {
   onClickMapMenu(e: any) { this.sortSelect('map_province');}
 }
 
+
+// this.dtOptions = {
+//   pagingType: 'full',
+//   pageLength: 5,
+//   ordering: false,
+//   searching: false,
+//   info: true,
+//   desctroy:true,
+//   lengthChange: false,
+//   language: {
+//     "search": "Cerca: ",
+//     "lengthMenu": " _MENU_ records per pagina",
+//     "zeroRecords": "Nessun elemento trovato",
+//     "info": "Mostra pagina _PAGE_ di _PAGES_",
+//     "infoEmpty": "Nessun record",
+//     "infoFiltered": "(Filtrato da _MAX_ totali records)",
+//     'loadingRecords': '&nbsp;',
+//     'processing': '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><span class="sr-only">Loading...</span>',
+//     "paginate": {
+//       numbers: 5,
+//       "first": '<span class="sr-only">Prima pagina</span><i class="fas fa-angle-double-left"></i>',
+//       "previous": '<span class="sr-only">Pagina precedente</span><i class="fas fa-angle-left"></i>',
+//       "next": '<span class="sr-only">Pagina successiva</span><i class="fas fa-angle-right"></i>',
+//       "last": '<span class="sr-only">Ultima pagina</span><i class="fas fa-angle-double-right"></i>'
+//     }
+//   },
+//   processing: true
+//   }
 
 // Click Mappa
 /*onMapClick(e: any) {

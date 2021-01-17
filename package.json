@@ -11,6 +11,8 @@
   },
   "private": true,
   "dependencies": {
+    "@ag-grid-community/all-modules": "^25.0.1",
+    "@ag-grid-community/angular": "^25.0.1",
     "@angular/animations": "~11.0.5",
     "@angular/common": "~11.0.5",
     "@angular/compiler": "~11.0.5",
@@ -39,6 +41,8 @@
     "@types/leaflet.heat": "^0.2.0",
     "@types/leaflet.markercluster": "^1.4.3",
     "admin-lte": "^3.1.0-rc",
+    "ag-grid-angular": "^25.0.1",
+    "ag-grid-community": "^25.0.1",
     "angular-datatables": "^10.1.0",
     "bootstrap": "^4.5.3",
     "datatables.net": "^1.10.23",

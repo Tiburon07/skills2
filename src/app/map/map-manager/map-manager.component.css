@@ -65,7 +65,8 @@
 
 .collapsePoints {
   display: block;
-  background-color: #f4f6f9;
+  background-color: #6c757d;
+  //background-color: #28a745;
   width: 100%;
   position: absolute;
   z-index: 401;

@@ -7,8 +7,8 @@ import localeIt from '@angular/common/locales/it';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http'
 import { NgxSpinnerModule } from "ngx-spinner";
-import {DataTablesModule} from 'angular-datatables';
-
+import { AgGridModule } from 'ag-grid-angular';
+import { BtnCellRenderer } from './map/map-manager/btn-cell-renderer.component';
 
 
 //Currency format
@@ -60,7 +60,8 @@ import { SignupComponent } from './ums/signup/signup.component';
     UserProfileComponent,
     GoogleBooksComponent,
     LoginComponent,
-    SignupComponent
+    SignupComponent,
+    BtnCellRenderer
   ],
   imports: [
     BrowserModule,
@@ -71,7 +72,7 @@ import { SignupComponent } from './ums/signup/signup.component';
     HttpClientModule,
     NgxSpinnerModule,
     LeafletModule,
-    DataTablesModule
+    AgGridModule.withComponents([BtnCellRenderer])
   ],
   providers: [UserService, GoogleBookService, MapManagerService],
   bootstrap: [AppComponent]
